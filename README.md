@@ -1,4 +1,4 @@
 openstage
 =========
 
-Arduino-based microscope stage controller
+OpenStage is a sub-micron positioning system for microscope stages. 
