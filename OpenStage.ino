@@ -81,7 +81,7 @@
         head and stepper motor shaft (if shaft is not 1/4"). 
 
   - Misc: You will also need a power supply for the motors (24V), a power supply for the
-   Arduino and associated electronics, a 20x4 character LCD display, LEDs, push-buttons, 
+   Arduino and associated electronics, a 20x4 character LCD display, LEDs, 
    power switches, etc. If you don't want to bother with the display, then you
    can just skip those items and comment out those code lines. Finally, a Sparkfun 
    RS232 Serial Shifter is needed if you want to interface the controller with a PC
