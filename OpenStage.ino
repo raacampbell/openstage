@@ -23,7 +23,13 @@
 
 
 
-
+* Citing
+  This work has been published under the title: "Openstage: A Low-Cost 
+  Motorized Microscope Stage with Sub-Micron Positioning Accuracy" by
+  Campbell, Eifert, and Turner in PLoS ONE, 2014, DOI: 10.1371/journal.pone.0088977
+  http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0088977
+  Please cite us if you publish using our methods. 
+  
 
 * Purpose
   OpenStage is a sub-micron positioning system for microscope stages. 
@@ -311,6 +317,8 @@ float buttonStageLocations[4][numAxes] = {{0,0,0},
 // This is important, as it minimises the possibility of the user double-clicking a button 
 // unbound to a location as it may make the stage perform a large motion to back to zero.
 bool locationStored[4]={0,0,0,0};
+
+
 
 //------------------------------------------------------------------------------------------------
 // * Motor control DIO lines
