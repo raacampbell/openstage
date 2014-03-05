@@ -244,10 +244,9 @@ unsigned int moveToAccel[numAxes]={1.0E4,1.0E4,1.0E4};
 // * Stage Position
 // The stage controller unit keeps track of how far the stage has moved along each axis. This
 // allows the unit to do handy things such as moving to a pre-defined absolute location. When
-// the controller boots up it assumes it is at [0,0,0]. Axes can be zeroed independently at any 
-// time using push-buttons.  In future, we coudld  save the position to EEPROM so it's persistant. 
-// Note that there are no encoders: if you manually move the stage, it loses it's position and needs
-// to be reset. **BE CAREFUL** Manually moving the stage and forgetting to reset might cause a 
+// the controller boots up it assumes it is at [0,0,0]. Note that there are no encoders: 
+// if you manually move the stage, it loses it's position and needs to be reset.
+// **BE CAREFUL** Manually moving the stage and forgetting to reset might cause a 
 // dangerous stage motion. 
 //
 // The absolute positioning abilities of the stage can be accessed most diectly using the right
