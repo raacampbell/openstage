@@ -153,7 +153,12 @@ PS3USB PS3(&Usb); // This will just create the instance
 
 //------------------------------------------------------------------------------------------------
 // * Microscope axis hardware definitions. 
+//
+//                                   === WARNING ===
+//   ******************************************************************************
 //  ==> This section must be filled out correctly or you may damage your hardware <==
+//   ******************************************************************************
+//
 //
 // The properties of each axis are defined as separate variables (mostly arrays with a length 
 // equal to the number of axes). 
