@@ -298,15 +298,6 @@ short hatStickThresh=40;
 // The inputs to the PlayStation controller modify the following global variables which
 // are used to move the stage. These are not user settings. 
 
-// Counters for right hand buttons. 
-// The right hand buttons are used to store and return to a maximum of 4 different absolute 
-// positions. Storing a position is achieved by a "long press" (squeeze the button hard for
-// 1.5 seconds. Returning is achieved by double-clicking. We need variables to store timings
-// for implementing that behavior. These variables are defined below. The buttons are stored
-// in the order: Triangle, Circle, Cross, Square. So clockwise from 12 o'clock. 
-unsigned long roundButtonPressTimer[4]={0,0,0,0};
-unsigned long roundButtonClickTimer[4]={0,0,0,0};
-
 // buttonStageLocations
 // The buttons will be used to store 4 different stage locations. We store these in a 2-D
 // array, where the first dimension is button and the second is axis:

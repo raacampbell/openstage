@@ -8,6 +8,14 @@ int pollPS3(){
 
   Usb.Task(); //Performs unknown USB magic
 
+  // Counters for right hand buttons. 
+  // The right hand buttons are used to store and return to a maximum of 4 different absolute 
+  // positions. Storing a position is achieved by a "long press" (squeeze the button hard for
+  // 1.5 seconds. Returning is achieved by double-clicking. We need variables to store timings
+  // for implementing that behavior. These variables are defined below. The buttons are stored
+  // in the order: Triangle, Circle, Cross, Square. So clockwise from 12 o'clock. 
+  static unsigned long roundButtonPressTimer[4]={0,0,0,0};
+  static unsigned long roundButtonClickTimer[4]={0,0,0,0};
 
   //Read Hat Sticks and set pulse rates
 
