@@ -115,7 +115,7 @@
      stored location. All four buttons default to the position of the stage on reboot. 
 
 
- * Other files:
+ * Other files included in this distribution:
    - OS_pollPS3.ino contains the function that polls the PS3 controller and initiates moves.
    - OS_moveToTarget.ino contains the function the performs moves following button double-clicks
    - OS_HelperFunctions.ino contains other (more peripheral) functions
