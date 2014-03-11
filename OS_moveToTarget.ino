@@ -9,7 +9,7 @@
 // **  You will need to change the speed and step sizes in this file for your motors **
 void moveToTarget(float target[]){
   
- byte verbose=1;
+ byte verbose=0;
  int ii; //for loop counter
  // Serial.println("Entering moveToTarget");
  float intendedMove[numAxes]; //How far to move on each axis. 
