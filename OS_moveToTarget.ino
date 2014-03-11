@@ -124,7 +124,7 @@ void runSteppersToPos(){
       //This is due to it getting stuck in this loop with the motors at zero
       //speed. Not yet clear why this happens, but in the mean time we can catch
       //it with the following code and deliver an audible indication that something
-      //is wrong. This enables us to keep keep going and not lock up. 
+      //is wrong. This enables us to keep going and not lock up. 
       if (stepperX.speed()==0 && 
           stepperY.speed()==0 &&
           stepperZ.speed()==0)
