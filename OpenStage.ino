@@ -168,7 +168,7 @@ PS3USB PS3(&Usb); // This will just create the instance
 
 
 // numAxes
-const byte numAxes=3; //The number of motorised axes  
+const byte numAxes=3; //The number of motorised axes
 
 // axisPresent
 // Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent.
@@ -397,7 +397,8 @@ LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
 
 //------------------------------------------------------------------------------------------------
 // * Serial communiciation via serial shifter (Sparkfun) to allow the PC to interface with the
-// the stage
+// the stage. We use the serial shifter rather than the virtual serial port because this makes
+// debugging easier. 
 int doSerialInterface=1;
 long values[numAxes]; // array holding values for all the received fields from the seria1 port
                      // see serialMove(). For some reason this must be a global. 
