@@ -43,15 +43,15 @@ int readSerialCSV(){
 //Make a relative or absolute motion 
 void serialMove()
 {
-    //Determine if this will be an absolute or relative motion
-    while(Serial1.available() == 0 );//block until char arrives
-    char moveType=Serial1.read();
+   //Determine if this will be an absolute or relative motion
+   while(Serial1.available() == 0 );//block until char arrives
+   char moveType=Serial1.read();
     
-    //Define variables
-    int doneReading=0; //1 when all axis fields have been read
+   //Define variables
+   int doneReading=0; //1 when all axis fields have been read
 
 
-    float serialTarget[numAxes]; //Where we will be going to in microns
+   float serialTarget[numAxes]; //Where we will be going to in microns
    
    int fieldIndex=readSerialCSV();
 

@@ -149,6 +149,13 @@ PS3USB PS3(&Usb); // This will just create the instance
 #include <Wire.h> //Seems to be needed on some systems
 
 
+//------------------------------------------------------------------------------------------------
+// * Enable/disable major OpenStage functions 
+//
+bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port
+bool doGamePad=1; //Set to 1 to enable PS3 DualShock as an input device
+
+
 
 
 //------------------------------------------------------------------------------------------------
@@ -399,7 +406,6 @@ LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
 // * Serial communiciation via serial shifter (Sparkfun) to allow the PC to interface with the
 // the stage. We use the serial shifter rather than the virtual serial port because this makes
 // debugging easier. 
-int doSerialInterface=1;
 long values[numAxes]; // array holding values for all the received fields from the seria1 port
                      // see serialMove(). For some reason this must be a global. 
 
@@ -465,19 +471,31 @@ void setup() {
   lcd.clear();
 
   // Connect to the USB Shield
-  if (Usb.Init() == -1) {
-    Serial.print(F("\r\nConnection to USB shield failed"));
+  if (doGamePad){
+    if (Usb.Init() == -1) {
+      Serial.print(F("\r\nConnection to USB shield failed"));
     
-    //halt and flash warning
-    while(1){
-       lcd.setCursor (0, 1);   
-       lcd.print (" No USB connection!");
-       delay(1000);
-       lcd.clear();
-       delay(1000);
-     }
-        
-  }  
+      //halt and flash warning
+      while(1){
+         lcd.setCursor (0, 1);   
+         lcd.print (" No USB connection!");
+         delay(1000);
+         lcd.clear();
+         delay(1000);
+       }      
+     }  
+  
+   //Pre-calculate the speeds for different hat-stick values. This moves these
+   //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
+   for (ii=0; ii<128; ii++){
+     for (jj=0; jj<4; jj++){
+        //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
+        SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
+      }  
+    }
+    
+  }//if doGamePad
+  
 
   //Display boot message on LCD screen  
   lcd.setCursor (0,0);   
@@ -486,19 +504,12 @@ void setup() {
 
 
 
-  //Pre-calculate the speeds for different hat-stick values. This moves these
-  //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
-  for (ii=0; ii<128; ii++){
-    for (jj=0; jj<4; jj++){
-       //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
-       SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
-     }  
-   }
+ 
    
 
   //the variable thisStep can take on one of four values for each axis
   //Calculate all of these here
-  Serial.println(" ");
+  Serial.println("\nStep Sizes (microns)");
   Serial.println("Axis   Mode 1  Mode 2  Mode 3  Mode 4");
   for (ii=0; ii<numAxes; ii++){
     Serial.print(" ");
@@ -515,7 +526,7 @@ void setup() {
 
 
   //Report moveTo RPM to attain max speed for each axis, min step, and whatever else seems like a good idea.
-  Serial.println("\nmoveTo() speeds:");
+  Serial.println("\nmoveTo() speeds");
   for (ii=0; ii<numAxes; ii++){
     Serial.print(ii+1);
     Serial.print(" RPM: ");
@@ -526,15 +537,16 @@ void setup() {
     Serial.println(moveToSpeed[ii] / ((fullStep[ii]/360) * moveToStepSize * gearRatio[ii]));
   }
 
-  // Poll the USB interface a few times. Failing to do this causes the motors to move during 
-  // following a rest. I don't know why the following code fixes this, but it does. 
-  for (ii=1; ii<10; ii++){
-    Usb.Task(); 
-    delay(100); 
-    lcd.print(".");
-   }
-  
-  setPSLEDS(); //Set the LEDs on the DualShock to the correct states
+  if (doGamePad){
+    // Poll the USB interface a few times. Failing to do this causes the motors to move during 
+    // following a rest. I don't know why the following code fixes this, but it does. 
+    for (ii=1; ii<10; ii++){
+      Usb.Task(); 
+      delay(100); 
+      lcd.print(".");
+     }
+    setPSLEDS(); //Set the LEDs on the DualShock to the correct states
+  } //if doGamePad
 
 
   //Set default values for the AccelStepper instances
@@ -544,32 +556,32 @@ void setup() {
   }
 
 
-
   pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
-
   pinMode(beepPin,OUTPUT); //Produce sound on this pin
 
-  Serial.println(' '); //Adds a character return so any debug information that follows looks better
-
-
-  //An analog stick value zero likely means that the controller is not connected. 
-  //Don't proceed until a contoller is found, or the stage will move by itself
-  lcd.clear();
+  //An analog stick value of zero likely means that the controller is not connected. 
+  //If the game pad is enabled, don't proceed until a contoller is found, or the 
+  //stage will move by itself.
+  if (doGamePad){ 
     while (PS3.getAnalogHat(LeftHatX)==0){
-    lcd.setCursor(0,1);
-    lcd.print("Connect DualShock");
-    lcd.setCursor(0,2);
-    lcd.print("And Re-Boot");
-  }
+      lcd.setCursor(0,1);
+      lcd.print("Connect DualShock");
+      lcd.setCursor(0,2);
+      lcd.print("And Re-Boot");
+    }
+  } //if doGamePad
+  
   lcd.clear();
   lcd.home();
    
 
   setupLCD();//Print axis names to LCD
 
-  if (doSerialInterface)
+  if (doSerialInterface){
      Serial1.begin(115200);
-     
+  }
+
+  Serial.println("\nSetup function completed");
 }//End of setup function 
 
 
@@ -606,7 +618,8 @@ void loop() {
 
 
   //Poll DualShock
-  if (++n == nCycles){
+  if (++n == nCycles && doGamePad){
+    Serial.println("Polling gamepad"); //DEBUG
     moving=pollPS3();  
     n=0;
   }
@@ -617,9 +630,10 @@ void loop() {
   //at this speed. 
   if (lcdCounter++ == lcdCycles+lcdAxisTimer ) {
     
-      if (coarseFine<4 || moving==0)
+      if (coarseFine<4 || moving==0){
           lcdStagePos(lcdAxis,stagePosition[lcdAxis],currentSpeed[lcdAxis]);
-
+      }
+      
       //update counters   
       lcdAxis++;
       lcdAxisTimer+=500;
@@ -630,16 +644,19 @@ void loop() {
       }
     }
 
+  if (doGamePad){
+    //Move motors based on hat-stick positions
+    for (byte ii=0; ii<numAxes; ii++){
+       (*mySteppers[ii]).runSpeed();
+    }
+  }
 
-  //Move motors based on hat-stick positions
-  for (byte ii=0; ii<numAxes; ii++)
-     (*mySteppers[ii]).runSpeed();
 
   //Move based on serial commands 
   if (doSerialInterface){
     if (Serial1.available()){
         char ch=Serial1.read(); //read first character
-        //Serial.println(ch);
+        //Serial.println(ch); //Uncomment for debug info
         if (ch=='g') //Absolute and relative motion
           serialMove(); 
         if (ch=='m') //Set speed mode on DualShock

@@ -38,9 +38,10 @@ int pollPS3(){
   moving=0;
 
   for (byte ii=0; ii<numAxes; ii++){
-    if (!axisPresent[ii])
+    if (!axisPresent[ii]){
       continue;
-
+    }
+    
     //Update stage posision based on how far it's moved since we last entered this function
     long deltaPos = (*mySteppers[ii]).currentPosition() - stepperPreviousPos[ii];
     if (abs(deltaPos)>0){
@@ -77,24 +78,26 @@ int pollPS3(){
   // happens until we exit this loop. Must exit shoulder button evaluation so user
   // can't change mode whilst motors are moving. If this occurs, the position 
   // calculation will be incorrect.
-  if (moving)
+  if (moving){
     return moving;
-
+  }
 
 
 
   //Set coarse/fine using the shoulder buttons
   if(PS3.getButtonClick(L1)){
     coarseFine++;
-    if (coarseFine>4)
+    if (coarseFine>4){
       coarseFine=4;
-      setPSLEDS();
     }
+    setPSLEDS();
+   }
 
   if (PS3.getButtonClick(R1)){
      coarseFine--;
-     if (coarseFine<1)
+     if (coarseFine<1){
       coarseFine=1;
+     }
      setPSLEDS();
    }
 

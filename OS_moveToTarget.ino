@@ -17,8 +17,9 @@ void moveToTarget(float target[]){
  
  
   
-       
-  PS3.setAllOff(); //Switch off the LEDs to indicate that we're making a non-manual motion
+  if (doGamePad){     
+    PS3.setAllOff(); //Switch off the LEDs to indicate that we're making a non-manual motion
+  }
 
   float oneStep[numAxes]; //how far one step takes us
   long stepsToTake[numAxes]; //how many steps to take on each axis
@@ -79,15 +80,19 @@ void moveToTarget(float target[]){
 
 
   //Now run the steppers until they get there
-  if (verbose)
+  if (verbose){
     Serial.println("Moving");
-    
+  }
+
   runSteppersToPos();  
 
 
   //Return LEDs and Big Easy Drivers to previously selected step size
   //This also re-calculates the step size (which we re-defined above).
-  setPSLEDS();
+  if (doGamePad){
+    setPSLEDS();
+  }
+  
   for (ii=0; ii<numAxes; ii++){
      if (!axisPresent[ii])
        continue;
