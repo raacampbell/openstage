@@ -29,7 +29,7 @@ int pollPS3(){
   hatVals[0]=127.5-PS3.getAnalogHat(LeftHatX);
   hatVals[1]=127.5-PS3.getAnalogHat(LeftHatY);
   hatVals[2]=127.5-PS3.getAnalogHat(RightHatY);
-
+  //hatVals[3]=127.5-PS3.getAnalogHat(RightHatX); //FOURTH AXIS
 
   // stage LEDpins
   //This number will be incremented using bit shifts to allow rapid LED switching
@@ -69,7 +69,7 @@ int pollPS3(){
       } 
 
      //Write to stageLEDs on Port C
-     PORTC &= 240; //zero first 4 pin but leave the rest the same
+     PORTC &= 240; //zero first 4 pins but leave the rest the same
      PORTC |= stageLEDpins;
 
   }//End for (byte ii=0; ii<numAxes; ii++), the motion interval setting loop

@@ -154,7 +154,7 @@ PS3USB PS3(&Usb); // This will just create the instance
 //
 bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port
 bool doGamePad=1; //Set to 1 to enable PS3 DualShock as an input device
-
+bool doLCD=1; //Set to 1 to enable LCD character display
 
 
 
@@ -194,9 +194,9 @@ unsigned short gearRatio[numAxes]={635,635,250};
 float fullStep[numAxes]={0.9,0.9,0.9}; //In degrees
 
 // disableWhenStationary
-// bool to tell the system whether or not a motor should be disabled when the stage isn't moving
-// disabling will reduce noise but can cause the motors to move to the nearest full step when the
-// power is switched off. It may make sense to do this in X and Y but not Z. 
+// bool to tell the system whether or not a motor should be disabled when the stage isn't moving.
+// Disabling will reduce noise but can cause the motors to move to the nearest full step when the
+// power is switched off. Perhaps it makes make sense to do this in X and Y but not Z. 
 bool disableWhenStationary[numAxes]={0,0,0};
 
 
@@ -466,9 +466,11 @@ void setup() {
 
 
   //Initialise the 20 by 4 LCD display 
-  lcd.begin(20,4);               
-  lcd.home ();                   
-  lcd.clear();
+  if (doLCD){
+   lcd.begin(20,4);               
+   lcd.home ();                   
+   lcd.clear();
+  }
 
   // Connect to the USB Shield
   if (doGamePad){
@@ -476,32 +478,38 @@ void setup() {
       Serial.print(F("\r\nConnection to USB shield failed"));
     
       //halt and flash warning
-      while(1){
-         lcd.setCursor (0, 1);   
-         lcd.print (" No USB connection!");
-         delay(1000);
-         lcd.clear();
-         delay(1000);
-       }      
-     }  
-  
-   //Pre-calculate the speeds for different hat-stick values. This moves these
-   //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
-   for (ii=0; ii<128; ii++){
-     for (jj=0; jj<4; jj++){
-        //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
-        SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
+      if (doLCD){
+        while(1){ //infinite while loop
+           lcd.setCursor (0, 1);   
+           lcd.print (" No USB connection!");
+           delay(1000);
+           lcd.clear();
+           delay(1000);
+         }// while
       }  
-    }
-    
+    }//if USB.init 
+
+     //Pre-calculate the speeds for different hat-stick values. This moves these
+     //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
+     for (ii=0; ii<128; ii++){
+       for (jj=0; jj<4; jj++){
+          if (jj==0 && ii==0){
+            Serial.println("Calculating speed matrix for hat sticks");
+          }
+          //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
+          SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
+       }  
+     }
+
   }//if doGamePad
   
 
   //Display boot message on LCD screen  
-  lcd.setCursor (0,0);   
-  lcd.print ("Booting OpenStage");
-  lcd.setCursor (0,1);   
-
+  if (doLCD){
+   lcd.setCursor (0,0);   
+   lcd.print ("Booting OpenStage");
+   lcd.setCursor (0,1);   
+  }
 
 
  
@@ -516,13 +524,14 @@ void setup() {
     Serial.print(ii+1);
     Serial.print("      ");
     for (jj=0; jj<4; jj++){
-      if (axisPresent[ii])
+      if (axisPresent[ii]){
            thisStep[ii][jj] = (fullStep[ii]/360) * stepSize[jj] * gearRatio[ii];
            Serial.print(thisStep[ii][jj]);
            Serial.print("    ");
-     }
-     Serial.println(" ");
-  }
+      } //if axisPresent
+    } // jj for loop
+    Serial.println(" ");
+  } //ii for loop
 
 
   //Report moveTo RPM to attain max speed for each axis, min step, and whatever else seems like a good idea.
@@ -535,7 +544,7 @@ void setup() {
     Serial.print(fullStep[ii]/360.0*gearRatio[ii]*moveToStepSize);
     Serial.print("; pulse rate: ");
     Serial.println(moveToSpeed[ii] / ((fullStep[ii]/360) * moveToStepSize * gearRatio[ii]));
-  }
+  } //for loop
 
   if (doGamePad){
     // Poll the USB interface a few times. Failing to do this causes the motors to move during 
@@ -543,8 +552,10 @@ void setup() {
     for (ii=1; ii<10; ii++){
       Usb.Task(); 
       delay(100); 
-      lcd.print(".");
-     }
+      if (doLCD){
+        lcd.print(".");
+      } //if doLCD
+     } //for loop
     setPSLEDS(); //Set the LEDs on the DualShock to the correct states
   } //if doGamePad
 
@@ -564,22 +575,24 @@ void setup() {
   //stage will move by itself.
   if (doGamePad){ 
     while (PS3.getAnalogHat(LeftHatX)==0){
-      lcd.setCursor(0,1);
-      lcd.print("Connect DualShock");
-      lcd.setCursor(0,2);
-      lcd.print("And Re-Boot");
-    }
+      if (doLCD){
+        lcd.setCursor(0,1);
+        lcd.print("Connect DualShock");
+        lcd.setCursor(0,2);
+        lcd.print("And Re-Boot");
+     } //if doLCD
+    } //while PS3
   } //if doGamePad
   
-  lcd.clear();
-  lcd.home();
-   
-
-  setupLCD();//Print axis names to LCD
+  if (doLCD){
+    lcd.clear();
+    lcd.home();
+    setupLCD();//Print axis names to LCD
+  } //if doLCD
 
   if (doSerialInterface){
      Serial1.begin(115200);
-  }
+  } //if doSerialInterface
 
   Serial.println("\nSetup function completed");
 }//End of setup function 
@@ -618,7 +631,7 @@ void loop() {
 
 
   //Poll DualShock
-  if (++n == nCycles && doGamePad){
+  if (doGamePad && ++n == nCycles){
     moving=pollPS3();  
     n=0;
   }
@@ -627,7 +640,7 @@ void loop() {
   //With the current parameters, the motor stalls or is not smooth at
   //faster motions if the LCD display is being updated. So no updates 
   //at this speed. 
-  if (lcdCounter++ == lcdCycles+lcdAxisTimer ) {
+  if (doLCD && lcdCounter++ == lcdCycles+lcdAxisTimer) {
     
       if (coarseFine<4 || moving==0){
           lcdStagePos(lcdAxis,stagePosition[lcdAxis],currentSpeed[lcdAxis]);
@@ -641,14 +654,15 @@ void loop() {
         lcdAxisTimer=0;
         lcdCounter=0;
       }
-    }
+  } //if lcdCounter
+
 
   if (doGamePad){
     //Move motors based on hat-stick positions
     for (byte ii=0; ii<numAxes; ii++){
        (*mySteppers[ii]).runSpeed();
     }
-  }
+  } //if doGamePad
 
 
   //Move based on serial commands 
@@ -677,7 +691,6 @@ void loop() {
 
         Serial1.flush();
     }
-    
   }
 
 }//End loop()
