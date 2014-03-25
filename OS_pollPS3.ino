@@ -35,7 +35,7 @@ int pollPS3(){
   //This number will be incremented using bit shifts to allow rapid LED switching
   //http://www.arduino.cc/en/Reference/PortManipulation
   byte stageLEDpins = 0; //Stores which LED pins to flip high 
-  moving=0;
+  bool moving=0;
 
   for (byte ii=0; ii<numAxes; ii++){
     if (!axisPresent[ii]){

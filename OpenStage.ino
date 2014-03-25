@@ -611,23 +611,26 @@ void setup() {
 // * main loop
 // This is the microcontroller's main loop, which cycles continuously following successful 
 // completion of the setup function.
-
-// Polling the USB Host Shield to which the PS3 controller is connected takes time, so we don't
-// do it on every pass through the loop. About 30 to 50 times per second is adequate. In other words,
-// we read the positions of the analog sticks, the button states, etc, at about these rates.
-unsigned short n=0; //Counter to implement the periodic polling of the DualShock
-unsigned short nCycles=3000; //The DualShock is polled on every "nCycles" passses through the loop. 
-
-//LCD updating is slow, so we do it even more rarely than polling the PS3 controller, and also we 
-//do it in different cycles by making sure it's an odd number. 
-unsigned short lcdCounter=0;
-unsigned short lcdCycles=3301; //10k works out as roughly 6 Hz
-unsigned short lcdAxis=0;// counter to update axes on different cycles
-unsigned short lcdAxisTimer=0;// counter to update axes on different cycles
-
 float currentSpeed[3]; //An array defining the speed of each axis 
-bool moving=0; //0 if stationary moving; 1 more than one axis is moving
+
 void loop() {
+  //Define main loop static variables
+  static bool moving=0; //0 if stationary moving; 1 more than one axis is moving (this isn't a user setting)
+
+  // Polling the USB Host Shield to which the PS3 controller is connected takes time, so we don't
+  // do it on every pass through the loop. About 30 to 50 times per second is adequate. In other words,
+  // we read the positions of the analog sticks, the button states, etc, at about these rates.
+  static unsigned short n=0;          //Counter to implement the periodic polling of the DualShock
+  static unsigned short nCycles=3000; //The DualShock is polled on every "nCycles" passses through the loop. 
+
+  //LCD updating is slow, so we do it even more rarely than polling the PS3 controller, and also we 
+  //do it in different cycles by making sure it's an odd number. 
+  static unsigned short lcdCounter=0;
+  static unsigned short lcdCycles=3301; //10k works out as roughly 6 Hz
+  static unsigned short lcdAxis=0;      //counter to update axes on different cycles
+  static unsigned short lcdAxisTimer=0; //counter to update axes on different cycles
+
+
 
 
   //Poll DualShock
