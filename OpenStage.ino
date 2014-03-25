@@ -619,7 +619,6 @@ void loop() {
 
   //Poll DualShock
   if (++n == nCycles && doGamePad){
-    Serial.println("Polling gamepad"); //DEBUG
     moving=pollPS3();  
     n=0;
   }
