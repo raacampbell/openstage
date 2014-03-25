@@ -398,7 +398,6 @@ LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
 //------------------------------------------------------------------------------------------------
 // * Serial communiciation via serial shifter (Sparkfun) to allow the PC to interface with the
 // the stage
-// SEE HOW MANY OF THESE WE CAN MOVE TO THE SERIAL FUNCTION AND NOT HAVE AS GLOBALS
 int doSerialInterface=1;
 long values[numAxes]; // array holding values for all the received fields from the seria1 port
                      // see serialMove(). For some reason this must be a global. 
