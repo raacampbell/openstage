@@ -75,11 +75,14 @@ void serialMove()
 // * serialSetMode
 // Set speed mode on the DualShock
 void serialSetMode(){
+  if (!doGamePad){
+    return;
+  }
+
   while(Serial1.available() == 0 );//block until char arrives
 
   char ch = Serial1.read();
       
-   Serial.println(ch);
    if (ch=='1')
      coarseFine=1;
    if (ch=='2')
@@ -98,7 +101,6 @@ void serialSetMode(){
 // Current position becomes the new zero. 
 // Also updates any stored locations so that we can still returns to them
 void zeroStage(){
-  Serial.println("Zeroing stage");
   float delta[numAxes]; //difference between current position and previous zero
   for (byte ii=0; ii<numAxes; ii++){
     delta[ii]=stagePosition[ii];
