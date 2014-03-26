@@ -120,14 +120,11 @@ int pollPS3(){
       if (millis()-roundButtonPressTimer[ii]>longPress){
 
         //Store stage location in this button
-        Serial.print("Stored: ");
         for (byte jj=0; jj<numAxes; jj++){
           if (axisPresent[jj]==0)
             continue;
           buttonStageLocations[ii][jj]=stagePosition[jj];
-          Serial.print(stagePosition[jj]);
-          Serial.print(" ");
-         }
+        }
       
       
       Serial.println(' ');
