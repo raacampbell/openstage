@@ -80,10 +80,6 @@ void updateStagePos(int axis, long steps, float stepSize){
 // execute a motion of the appropriate magnitude, accelaration, and speed. 
 
 void dButtonMove(int axis, int direction){
-  byte verbose=0;
-  
-  if (verbose)
-   Serial.println("Doing D-Button move");
  
   //Prepare for the step
   digitalWrite(stageLEDs[axis],HIGH);
