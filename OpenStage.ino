@@ -432,7 +432,8 @@ void setup() {
 
   // Connect to the PC's serial port via the Arduino programming USB connection. 
   // This used mainly for printing de-bugging information to the PC's serial terminal
-  // during testing.
+  // during testing. [In future we will add the option for controlling the stage through
+  // the USB port]
   Serial.begin(115200);
 
 
@@ -492,10 +493,7 @@ void setup() {
      //Pre-calculate the speeds for different hat-stick values. This moves these
      //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
      for (ii=0; ii<128; ii++){
-       for (jj=0; jj<4; jj++){
-          if (jj==0 && ii==0){
-            Serial.println("Calculating speed matrix for hat sticks");
-          }
+       for (jj=0; jj<4; jj++){         
           //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
           SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
        }  
@@ -517,34 +515,14 @@ void setup() {
 
   //the variable thisStep can take on one of four values for each axis
   //Calculate all of these here
-  Serial.println("\nStep Sizes (microns)");
-  Serial.println("Axis   Mode 1  Mode 2  Mode 3  Mode 4");
   for (ii=0; ii<numAxes; ii++){
-    Serial.print(" ");
-    Serial.print(ii+1);
-    Serial.print("      ");
     for (jj=0; jj<4; jj++){
       if (axisPresent[ii]){
            thisStep[ii][jj] = (fullStep[ii]/360) * stepSize[jj] * gearRatio[ii];
-           Serial.print(thisStep[ii][jj]);
-           Serial.print("    ");
       } //if axisPresent
     } // jj for loop
-    Serial.println(" ");
   } //ii for loop
 
-
-  //Report moveTo RPM to attain max speed for each axis, min step, and whatever else seems like a good idea.
-  Serial.println("\nmoveTo() speeds");
-  for (ii=0; ii<numAxes; ii++){
-    Serial.print(ii+1);
-    Serial.print(" RPM: ");
-    Serial.print(int(60 * (moveToSpeed[ii]/(gearRatio[ii]*1.0))));
-    Serial.print("; min step: ");
-    Serial.print(fullStep[ii]/360.0*gearRatio[ii]*moveToStepSize);
-    Serial.print("; pulse rate: ");
-    Serial.println(moveToSpeed[ii] / ((fullStep[ii]/360) * moveToStepSize * gearRatio[ii]));
-  } //for loop
 
   if (doGamePad){
     // Poll the USB interface a few times. Failing to do this causes the motors to move during 
@@ -593,8 +571,6 @@ void setup() {
   if (doSerialInterface){
      Serial1.begin(115200);
   } //if doSerialInterface
-
-  Serial.println("\nSetup function completed");
 }//End of setup function 
 
 
