@@ -8,7 +8,11 @@
 //ADD ERROR CHECKING IF TOO MANY OR TOO FEW VALUES ARE SENT
 int readSerialCSV(){
   int fieldIndex = 0;  // the current field being received
-  int sSign[numAxes]={1,1,1}; //sign 
+
+  int sSign[numAxes]; //movement sign
+  for (int ii=0; ii<numAxes; ii++){
+    sSign[ii]=1;
+  }
 
   char ch;
   while (ch != '$'){ //read until the terminator ($) is reached
