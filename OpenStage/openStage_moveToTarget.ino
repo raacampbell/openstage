@@ -116,24 +116,33 @@ void runSteppersToPos(){
 
   int n=0; //counter to monitor if the controller is locked in this loop
   
-  while (stepperX.distanceToGo() != 0 ||
-         stepperY.distanceToGo() != 0 ||
-         stepperZ.distanceToGo() != 0){
-      stepperX.run();
-      stepperY.run(); 
-      stepperZ.run(); 
-      
+  long keepMoving=0;
+  while (keepMoving>0){
+
+    for (int ii=0; ii<numAxes; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      keepMoving += (*mySteppers[ii]).distanceToGo();
+      (*mySteppers[ii]).run();
+    }
+
       
       //Sometimes the controller locks up following analog stick motions
       //This is due to it getting stuck in this loop with the motors at zero
       //speed. Not yet clear why this happens, but in the mean time we can catch
       //it with the following code and deliver an audible indication that something
       //is wrong. This enables us to keep going and not lock up. 
-      if (stepperX.speed()==0 && 
-          stepperY.speed()==0 &&
-          stepperZ.speed()==0)
+      long currentTotalSpeed=0;
+      for (int ii=0; ii<numAxes; ii++){
+        if (!axisPresent[ii]){
+           continue;
+        }
+        currentTotalSpeed+=(*mySteppers[ii]).speed();
+      }
+      if (currentTotalSpeed==0){
             n++;
-            
+      }
       if (n>50){ //If we're stuck here not moving for 50 cycles then something's wrong!
         for (int ii=0; ii<5; ii++){
             serialBeep();
