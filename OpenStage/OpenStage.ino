@@ -153,7 +153,7 @@ PS3USB PS3(&Usb); // This will just create the instance
 // * Enable/disable major OpenStage functions 
 //
 bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
-bool controlViaUSB=1; //Control stage via USB serial (disables verbose messages via this port)
+bool controlViaUSB=0; //Control stage via USB serial (disables verbose messages via this port)
 bool doGamePad=1; //Set to 1 to enable PS3 DualShock as an input device
 bool doLCD=1; //Set to 1 to enable LCD character display
 
