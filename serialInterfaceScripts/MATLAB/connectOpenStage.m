@@ -24,6 +24,10 @@ function OS=connectOpenStage(DEV)
 %
 %
 % Rob Campbell - CHSL, August 2013
+%
+% -KNOWN ISSUES:
+% You will likely need to hard-code your serial port for the
+% automatic connection to work.
 
 
 
