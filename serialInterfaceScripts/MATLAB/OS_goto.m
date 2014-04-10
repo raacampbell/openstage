@@ -1,4 +1,4 @@
-function OS_goto(coords,motionType)
+function OS_goto(coords,motionType,nAxes)
 % Go To an X,Y, and Z position with OpenStage
 %
 % function OS_goto(coords,motionType)
@@ -10,8 +10,8 @@ function OS_goto(coords,motionType)
 % Inputs 
 % coords - Desired position of each axis in microns. All axes must be
 %          set. By convention axes are ordered: x,y,z.  
-% motionType [optional]- a character 'a' [default] or 'r' for absolute or relative. 
-%
+% motionType [optional] - a character 'a' [default] or 'r' for absolute or relative. 
+% nAxes [optional] - define the number of axes. 3 by default.
 %
 % Examples
 % OS_goto([0,200.5,0])   %moves to position X: 0, Y: 200.5, Z: 0
@@ -37,14 +37,16 @@ if nargin<2
     motionType='a';
 end
 
+if nargin<3
+  nAxes=3;
+end
+
 
 coords=round(coords*1.0E3); 
 
-str=sprintf('g%s%d,%d,%d$',...
-        motionType,...
-        round(coords(1)),...
-        round(coords(2)),...
-        round(coords(3)));
+AX=repmat('%d,',nAxes);
+AX(end)=[];
+str=sprintf(['g%s',AX], motionType, coords);
 fwrite(OS,str)
     
 
