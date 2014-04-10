@@ -44,8 +44,8 @@ end
 
 coords=round(coords*1.0E3); 
 
-AX=repmat('%d,',nAxes);
-AX(end)=[];
+AX=repmat('%d,',1,nAxes);
+AX(end)='$';
 str=sprintf(['g%s',AX], motionType, coords);
 fwrite(OS,str)
     
