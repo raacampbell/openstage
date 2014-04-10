@@ -9,7 +9,7 @@
 // **  You will need to change the speed and step sizes in this file for your motors **
 void moveToTarget(float target[]){
   
- byte verbose=0;
+ byte verbose=1;
  int ii; //for loop counter
  float intendedMove[numAxes]; //How far to move on each axis. 
  setStep(moveToStepSize);
@@ -27,8 +27,7 @@ void moveToTarget(float target[]){
   for (ii=0; ii<numAxes; ii++){
     if (!axisPresent[ii])
       continue;
-  
- 
+   
     intendedMove[ii]=target[ii]-stagePosition[ii]; //How far we need to move
 /*
     //compensate for backlash
@@ -113,10 +112,13 @@ void moveToTarget(float target[]){
 
 
 void runSteppersToPos(){
-
+  bool verbose=0;
   //int n=0; //counter to monitor if the controller is locked in this loop
   bool keepMoving=1;
 
+  if (verbose){
+    Serial.println("Entering while loop in runSteppersToPos()");
+  }
   while (keepMoving){
     
     keepMoving=0;
@@ -128,10 +130,13 @@ void runSteppersToPos(){
          keepMoving=1;         
       } 
     }
-    
+
     //Motion is a touch faster if we place run code here
-    for (int ii=1; ii<numAxes; ii++){
-       (*mySteppers[ii]).run();
+    for (int ii=0; ii<numAxes; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      (*mySteppers[ii]).run();
     }
     
      
