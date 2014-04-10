@@ -11,7 +11,6 @@ void moveToTarget(float target[]){
   
  byte verbose=0;
  int ii; //for loop counter
- // Serial.println("Entering moveToTarget");
  float intendedMove[numAxes]; //How far to move on each axis. 
  setStep(moveToStepSize);
  
