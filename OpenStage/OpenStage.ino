@@ -648,7 +648,6 @@ void loop() {
   if (doSerialInterface){
     if (Serial1.available()){
         char ch=Serial1.read(); //read first character
-        //Serial.println(ch); //Uncomment for debug info
         if (ch=='g') //Absolute and relative motion
           serialMove(); 
         if (ch=='m') //Set speed mode on DualShock
