@@ -113,33 +113,35 @@ void moveToTarget(float target[]){
 
 
 void runSteppersToPos(){
-  bool verbose=1;
-  if (verbose){
-     Serial.println("Entering runSteppersToPos");
-  }
-  
 
-  int n=0; //counter to monitor if the controller is locked in this loop
-  long keepMoving=1;
-  while (keepMoving>0){
+  //int n=0; //counter to monitor if the controller is locked in this loop
+  bool keepMoving=1;
+
+  while (keepMoving){
     
     keepMoving=0;
     for (int ii=0; ii<numAxes; ii++){
       if (!axisPresent[ii]){
         continue;
       }
-      if ((*mySteppers[ii]).distanceToGo()>0){
-          keepMoving++;
-          (*mySteppers[ii]).run();
-      }
+      if ((*mySteppers[ii]).distanceToGo() != 0){
+         keepMoving=1;         
+      } 
     }
-      
+    
+    //Motion is a touch faster if we place run code here
+    for (int ii=1; ii<numAxes; ii++){
+       (*mySteppers[ii]).run();
+    }
+    
+     
+      //I haven't seen lock-ups in ages, so we comment out this code. 
       //Sometimes the controller locks up following analog stick motions
       //This is due to it getting stuck in this loop with the motors at zero
       //speed. Not yet clear why this happens, but in the mean time we can catch
       //it with the following code and deliver an audible indication that something
       //is wrong. This enables us to keep going and not lock up. 
-      long currentTotalSpeed=0;
+       /*  long currentTotalSpeed=0;
       for (int ii=0; ii<numAxes; ii++){
         if (!axisPresent[ii]){
            continue;
@@ -158,6 +160,7 @@ void runSteppersToPos(){
           }
         break;
       }
+      */
    } //close while loop
 
 } //End runSteppersToPos
