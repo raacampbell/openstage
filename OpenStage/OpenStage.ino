@@ -152,8 +152,7 @@ PS3USB PS3(&Usb); // This will just create the instance
 //------------------------------------------------------------------------------------------------
 // * Enable/disable major OpenStage functions 
 //
-bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
-bool controlViaUSB=0; //Control stage via USB serial (disables verbose messages via this port)
+bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. See setup() for serial port IDs.
 bool doGamePad=1; //Set to 1 to enable PS3 DualShock as an input device
 bool doLCD=1; //Set to 1 to enable LCD character display
 
@@ -414,6 +413,7 @@ long values[numAxes]; // array holding values for all the received fields from t
 
 
 
+
 //------------------------------------------------------------------------------------------------
 // * setup function
 // The setup function is run once when the microcontroller is powered on, reset, or programmed. 
@@ -423,7 +423,6 @@ long values[numAxes]; // array holding values for all the received fields from t
 // The setup function performs basic operations such as defining the DIO direction of each pin, 
 // connecting to a serial device, etc. 
   
-HardwareSerial *SerialComms;
 void setup() {
 
   //Initialise loop counters
@@ -436,18 +435,6 @@ void setup() {
   // during testing. [In future we will add the option for controlling the stage through
   // the USB port]
   Serial.begin(115200);
-  if (doSerialInterface){
-    if (!controlViaUSB){
-       Serial1.begin(115200);
-        SerialComms = &Serial1;
-         SerialComms->println("test");
-
-     } else {
-         SerialComms = &Serial;
-         SerialComms->println("test");
-
-     }
-  } //if doSerialInterface
 
 
 
@@ -581,7 +568,9 @@ void setup() {
     setupLCD();//Print axis names to LCD
   } //if doLCD
 
-
+  if (doSerialInterface){
+     Serial1.begin(115200);
+  } //if doSerialInterface
 }//End of setup function 
 
 
@@ -657,7 +646,7 @@ void loop() {
 
   //Move based on serial commands 
   if (doSerialInterface){
-    if (SerialComms->available()){
+    if (Serial1.available()){
         char ch=Serial1.read(); //read first character
         if (ch=='g') //Absolute and relative motion
           serialMove(); 
