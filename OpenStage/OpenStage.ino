@@ -149,13 +149,42 @@ PS3USB PS3(&Usb); // This will just create the instance
 #include <Wire.h> //Seems to be needed on some systems
 
 
+
+//------------------------------------------------------------------------------------------------
+// Some global definitions we want to set up before moving on 
+//
+// Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
+LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
+const byte maxAxes=4; //None of our stages will ever have more than 4 axes. 
+HardwareSerial* SerialComms;  //pointer to stage comms serial object
+
+
+
+
 //------------------------------------------------------------------------------------------------
 // * Enable/disable major OpenStage functions 
 //
-bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
-bool controlViaUSB=0; //Optional bool to control via USB. See setup() for serial port IDs.
 bool doGamePad=1; //Set to 1 to enable PS3 DualShock as an input device
-bool doLCD=1; //Set to 1 to enable LCD character display
+bool doLCD=1;     //Set to 1 to enable LCD character display
+
+
+
+//------------------------------------------------------------------------------------------------
+// * Serial communications
+//
+// You have three options for serial comms: 
+// 1) Control stage via PC serial port and receive optional debug information via USB (virtual 
+//    serial port). The latter is available by the verbose option in some of the functions. 
+// 2) Control stage via USB (virtual serial) but receive no debug info. 
+// 3) Disable serial comms for stage control. 
+//
+// These three possibilities are controlled by altering the following two variables:
+bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
+bool controlViaUSB=0;     //Set to 1 to control via USB. See setup() for serial port IDs.
+#define HARDWARE_SERIAL_PORT Serial1 //If using PC serial port, this is the ID of the MEGA's hardware serial line 
+
+
+
 
 
 
@@ -169,22 +198,20 @@ bool doLCD=1; //Set to 1 to enable LCD character display
 //
 //
 // The properties of each axis are defined as separate variables (mostly arrays with a length 
-// equal to the number of axes). 
-//
-// The elements in the arrays define the properties of X, Y, and Z in that order. Further 
-// axes can be added. A Z-only stage can also be set up by altering the code below. 
+// equal to the number of axes). You can have up 4 axes. 
 
-
-// numAxes
-const byte numAxes=3; //The number of motorised axes
+const byte numAxes=3; //Set this to the number of axes on you system 
 
 // axisPresent
-// Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent.
-bool axisPresent[numAxes]={1,1,1}; 
+// Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent. 
+// e.g. if you have one axis the following vector might be {1,0,0,0} Although {0,1,0,0} should 
+// also work
+bool axisPresent[maxAxes]={1,1,1,0}; 
+
 
 // gearRatio
-// Micrometer gear ratios on X,Y,Z in microns per revolution. 
-unsigned short gearRatio[numAxes]={635,635,250}; 
+// Micrometer gear ratios on X,Y,Z in microns per revolution. Unused axes can have any number. 
+unsigned short gearRatio[maxAxes]={635,635,250,635}; 
 
 
 // fullStep
@@ -192,163 +219,33 @@ unsigned short gearRatio[numAxes]={635,635,250};
 // degree step sizes. Motors with finer step sizes are available but driving them in 
 // quickly using sub-micron steps is a limiting factor. If you want to get up and running 
 // in the shortest time, 0.9 degree motors are suggested. 
-float fullStep[numAxes]={0.9,0.9,0.9}; //In degrees
+float fullStep[maxAxes]={0.9,0.9,0.9,0.9}; //In degrees
 
 // disableWhenStationary
 // bool to tell the system whether or not a motor should be disabled when the stage isn't moving.
 // Disabling will reduce noise but can cause the motors to move to the nearest full step when the
 // power is switched off. Perhaps it makes make sense to do this in X and Y but not Z. 
-bool disableWhenStationary[numAxes]={0,0,0};
+bool disableWhenStationary[maxAxes]={0,0,0,0};
 
-
-//------------------------------------------------------------------------------------------------
-// * Speed modes (hat-stick)
-//
-// There will be four (coarse to fine) speeds which may be selected via the two shoulder buttons 
-// (L1 and R1). The currently selected speed will be inidicated by the 4 LEDs on the DualShock.
-// 1 is fine and slow and 4 is coarse and fast. Here we define the step size and max speed for those
-// 4 speed settings. If you change these, you should verify with an osciloscope and the serial 
-// monitor that the right values are being produced. You will also need to verify that you are not
-// over-driving you motor and causing it to miss steps. Missing steps means the controller will lose
-// its absolute position (there is no feedback from the motors). Note that the selection of speed
-// values and step sizes are chosen based on the resulting step frequencies the controller must 
-// produce and on resonances the motors might exhibit.   
-byte coarseFine=2; //boot up in a fine mode
-unsigned short maxSpeed[4]={3.5,25,100,750}; //defined in microns per second
-
-
-// stepSize
-// The microstep sizes for each speed mode.
-float stepSize[4]={1/16.0, 1/8.0, 1/4.0, 1/2.0}; //Defined in fractions of a full step
-
-
-// curve
-// Curve is the non-linear mapping value to convert analog stick position to speed. The idea
-// is to make the conversion from analog stick value to motor pulse rate logarithmic. 
-// 0 is linear. See the fscale function for details. 
-float curve[4]={-7,-6,-5,-4};
-
-
-
-//------------------------------------------------------------------------------------------------
-// * Speed mode (D-pad)
-//
-// The D-pad will be used for making fixed-distance motions of a high speed. The size of the motions
-// depends on the coarseFine setting and is defined by the DPadStep array. There's a trade-off between
-// speed and accuracy. For these fast motions, I'd like to be hit about 1000 um/s but the AccelStepper 
-// moveTo function can only churn out about 4.3 kHz on an Arduino Mega. At 1/4 steps we get reliable
-// motions and about 700 um/s. A 1/4 step gives us a 0.156 micron resolution in Z (0.9 degree stepper 
-// and 250 um per rev micrometer). The motors MUST be enabled throughout or they will slip and become
-// hopelessly lost. To get increased accuracy *and* higher speeds we would need a faster micro-controller,
-// or write our own hardware-timer based routines, or slave comercial controllers.
-float DPadStep[4]={3,5,10,50}; 
-float DPadStepSize=1/2.0;
-// Acceleration in X, Y, and Z
-unsigned long DPadAccel[numAxes]={1.0E4, 1.0E4, 1.0E4};
-
-
-
-//------------------------------------------------------------------------------------------------
-// * moveTo speeds
-//
-// The moveToTarget() function is executed when the user travels to a right-button set point
-// or responds to a serial command. It does this using the settings described below. The minimum
-// step size and motor RPM are reported to the serial terminal on bootup.
-float moveToStepSize=1.0/2.0;
-unsigned int moveToSpeed[numAxes]={1600,1600,1200}; 
-unsigned int moveToAccel[numAxes]={1.0E4,1.0E4,1.0E4};
-
-
-//------------------------------------------------------------------------------------------------
-// * Stage Position
-// The stage controller unit keeps track of how far the stage has moved along each axis. This
-// allows the unit to do handy things such as moving to a pre-defined absolute location. When
-// the controller boots up it assumes it is at [0,0,0]. Note that there are no encoders: 
-// if you manually move the stage, it loses it's position and needs to be reset.
-// **BE CAREFUL** Manually moving the stage and forgetting to reset might cause a 
-// dangerous stage motion. 
-//
-// The absolute positioning abilities of the stage can be accessed most diectly using the right
-// hand buttons on the DualShock. Pressing down a button hard for 1 second stores the current
-// location of the stage. The stage will return to this location when the button is double-clicked.
-// The return motion is a straight line. It's up to the user to ensure that making this motion
-// won't cause the stage to hit anything. 
-// 
-// The following global variables are used by the controller code. They aren't user settings.  
-
-// stagePosition
-// The current stage position in microns. 
-float stagePosition[numAxes]={0,0,0}; 
-
-
-// stepperPreviousPos
-// The previous position of the steppers. We need to keep track of this in a counter in order to 
-// figure out how far we've pushed the stage each pass through the main loop. The stage position 
-// will be updated whenever pollPS3 is called. Note that stepperPreviousPos relates to stepper 
-// motor counts (which are integers) not the actual stage position (which a float and measured 
-// in microns).
-long stepperPreviousPos[3]={0,0,0}; 
-
-
-
-// thisStep
-// How far the last step has pushed the stage in microns. This is used to update the stage postion.
-float thisStep[numAxes][4];
-
-
-// SPEEDMAT
-// This matrix stores the motor speed for each hat-stick value at each speed mode. These numbers
-// are calculated once in the setup function and never change during execution. Pre-calculating 
-// them is a good way of improving performance during hat-stick motions. 
-float SPEEDMAT[128][4];
-
-// hatStickThresh
-//Ensure we don't get motion for stick values smaller than the following threshold
-short hatStickThresh=40; 
-
-
-
-
-
-
-//------------------------------------------------------------------------------------------------
-// * DualShock controller variables
-//
-// The inputs to the PlayStation controller modify the following global variables which
-// are used to move the stage. These are not user settings. 
-
-// buttonStageLocations
-// The buttons will be used to store 4 different stage locations. We store these in a 2-D
-// array, where the first dimension is button and the second is axis:
-float buttonStageLocations[4][numAxes] = {{0,0,0},
-                                          {0,0,0},
-                                          {0,0,0},
-                                          {0,0,0}};
-
-// locationStored
-// zero indicates that no position was stored. As positions are stored we update these to 1. 
-// This is important, as it minimises the possibility of the user double-clicking a button 
-// unbound to a location as it may make the stage perform a large motion to back to zero.
-bool locationStored[4]={0,0,0,0};
 
 
 
 //------------------------------------------------------------------------------------------------
 // * Motor control DIO lines
-//
+// Alter the following based on how your system is wired. 
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[numAxes]={22,24,26}; //Ordered X, Y, and Z
+byte stepOut[maxAxes]={22,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[numAxes]={23,25,27}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={23,25,27,0}; //Ordered X, Y, and Z
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[numAxes]={28,29,30}; //Ordered X, Y, and Z
+byte enable[maxAxes]={28,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
@@ -370,7 +267,8 @@ AccelStepper stepperY(1, stepOut[1], stepDir[1]);
 AccelStepper stepperZ(1, stepOut[2], stepDir[2]); 
 
 //Make an array of pointers to the AccelStepper instances to make loops possible
-AccelStepper *mySteppers[3]={&stepperX, &stepperY, &stepperZ};
+AccelStepper *mySteppers[numAxes]={&stepperX, &stepperY, &stepperZ};
+
 
 
 
@@ -378,8 +276,7 @@ AccelStepper *mySteppers[3]={&stepperX, &stepperY, &stepperZ};
 // * Outputs
 // The following are pin definitions of controller outputs. These signal information to the user
 
-//Misc
-byte beepPin=9; //This is the pin to which the Piezo buzzer is connected 
+byte beepPin=9; //Set this to the pin to which the Piezo buzzer is connected 
 
 // stageLEDs
 // LEDs will light when the stage moves or an axis is reset, 
@@ -399,16 +296,119 @@ byte stageLEDs[4]={37,36,35,35};
 
 
 
-// Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
-LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
 
 
 //------------------------------------------------------------------------------------------------
-// * Serial communiciation via serial shifter (Sparkfun) to allow the PC to interface with the
-// the stage. We use the serial shifter rather than the virtual serial port because this makes
-// debugging easier. 
-long values[numAxes]; // array holding values for all the received fields from the seria1 port
-                     // see serialMove(). For some reason this must be a global. 
+// PS3 Controller speed settings
+// The following settings define how the PS3 controller will control the stage. If you don't have a
+// PS3 controller, you can ignore the following 
+
+// * Speed modes (hat-stick)
+//
+// There will be four (coarse to fine) speeds which may be selected via the two shoulder buttons 
+// (L1 and R1). The currently selected speed will be inidicated by the 4 LEDs on the DualShock.
+// 1 is fine and slow and 4 is coarse and fast. Here we define the step size and max speed for those
+// 4 speed settings. If you change these, you should verify with an osciloscope and the serial 
+// monitor that the right values are being produced. You will also need to verify that you are not
+// over-driving you motor and causing it to miss steps. Missing steps means the controller will lose
+// its absolute position (there is no feedback from the motors). Note that the selection of speed
+// values and step sizes are chosen based on the resulting step frequencies the controller must 
+// produce and on resonances the motors might exhibit.   
+unsigned short maxSpeed[4]={3.5,25,100,750}; //defined in microns per second
+
+
+// stepSize
+// The microstep sizes for each speed mode.
+float stepSize[4]={1/16.0, 1/8.0, 1/4.0, 1/2.0}; //Defined in fractions of a full step
+
+// * Speed mode (D-pad)
+//
+// The D-pad will be used for making fixed-distance motions of a high speed. The size of the motions
+// depends on the coarseFine setting and is defined by the DPadStep array. There's a trade-off between
+// speed and accuracy. For these fast motions, I'd like to be hit about 1000 um/s but the AccelStepper 
+// moveTo function can only churn out about 4.3 kHz on an Arduino Mega. At 1/4 steps we get reliable
+// motions and about 700 um/s. A 1/4 step gives us a 0.156 micron resolution in Z (0.9 degree stepper 
+// and 250 um per rev micrometer). The motors MUST be enabled throughout or they will slip and become
+// hopelessly lost. To get increased accuracy *and* higher speeds we would need a faster micro-controller,
+// or write our own hardware-timer based routines, or slave comercial controllers.
+float DPadStep[4]={3,5,10,50}; 
+float DPadStepSize=1/2.0;
+// Acceleration in X, Y, and Z
+unsigned long DPadAccel[numAxes]={1.0E4, 1.0E4, 1.0E4};
+
+// * moveTo speeds
+//
+// The moveToTarget() function is executed when the user travels to a right-button set point
+// or responds to a serial command. It does this using the settings described below. The minimum
+// step size and motor RPM are reported to the serial terminal on bootup.
+float moveToStepSize=1.0/2.0;
+unsigned int moveToSpeed[maxAxes]={1600,1600,1200,1600}; 
+unsigned int moveToAccel[maxAxes]={1.0E4,1.0E4,1.0E4,1.0E4};
+//------------------------------------------------------------------------------------------------
+
+
+
+
+
+//---------------------------------UNLIKELY TO NEED TO CHANGE THESE-------------------------------
+// The following settings can be changed, but you're unlikely to need to do so. 
+byte coarseFine=2; //boot up in a fine mode
+short hatStickThresh=40; //Ensure we don't get motion for stick values smaller than the following threshold
+
+// curve
+// Curve is the non-linear mapping value to convert analog stick position to speed. The idea
+// is to make the conversion from analog stick value to motor pulse rate logarithmic. 
+// 0 is linear. See the fscale function for details. 
+float curve[4]={-7,-6,-5,-4};
+//------------------------------------------------------------------------------------------------
+
+
+
+//---------------------------------NON USER GLOBALS-----------------------------------------------
+//The following variables aren't user settings. They are counters, etc 
+
+long values[maxAxes]; // array holding values for all the received fields from the seria1 port
+
+// buttonStageLocations
+// The buttons will be used to store 4 different stage locations. We store these in a 2-D
+// array, where the first dimension is button and the second is axis:
+float buttonStageLocations[4][maxAxes] = {{0,0,0,0},
+                                          {0,0,0,0},
+                                          {0,0,0,0},
+                                          {0,0,0,0}};
+
+// locationStored
+// zero indicates that no position was stored. As positions are stored we update these to 1. 
+// This is important, as it minimises the possibility of the user double-clicking a button 
+// unbound to a location as it may make the stage perform a large motion to back to zero.
+bool locationStored[4]={0,0,0,0};
+
+
+// SPEENMAT stores the motor speed for each hat-stick value at each speed mode. These numbers
+// are calculated once in the setup function and never change during execution. Pre-calculating 
+// them is a good way of improving performance during hat-stick motions. 
+float SPEEDMAT[128][4];
+
+
+// stagePosition
+// The current stage position in microns. 
+float stagePosition[maxAxes]={0,0,0,0}; 
+
+
+// stepperPreviousPos
+// The previous position of the steppers. We need to keep track of this in a counter in order to 
+// figure out how far we've pushed the stage each pass through the main loop. The stage position 
+// will be updated whenever pollPS3 is called. Note that stepperPreviousPos relates to stepper 
+// motor counts (which are integers) not the actual stage position (which a float and measured 
+// in microns).
+long stepperPreviousPos[4]={0,0,0,0}; 
+
+
+// thisStep
+// How far the last step has pushed the stage in microns. This is used to update the stage postion.
+float thisStep[maxAxes][4];
+//------------------------------------------------------------------------------------------------
+
 
 
 
@@ -423,9 +423,6 @@ long values[numAxes]; // array holding values for all the received fields from t
 //
 // The setup function performs basic operations such as defining the DIO direction of each pin, 
 // connecting to a serial device, etc. 
-HardwareSerial* SerialComms;
-#define HARDWARE_SERIAL_PORT Serial1
-
 void setup() {
 
   //Initialise loop counters
