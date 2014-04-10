@@ -10,13 +10,13 @@ void setup() {
   // This used mainly for printing de-bugging information to the PC's serial terminal
   // during testing. [In future we will add the option for controlling the stage through
   // the USB port]
-  Serial.begin(115200);
+  Serial.begin(115200); //This is a bit horrible
   if (doSerialInterface){
     if (!controlViaUSB){
        HARDWARE_SERIAL_PORT.begin(115200);
-       SerialComms = &Serial1;
+       SerialComms = &HARDWARE_SERIAL_PORT;
      } else {
-        SerialComms = &Serial;
+        SerialComms = &HARDWARE_SERIAL_PORT;
      }
   } //if doSerialInterface
 
