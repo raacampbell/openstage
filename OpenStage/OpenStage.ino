@@ -153,7 +153,7 @@ PS3USB PS3(&Usb); // This will just create the instance
 // * Enable/disable major OpenStage functions 
 //
 bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
-bool controlViaUSB=0; //Control stage via USB serial (disables verbose messages via this port)
+bool controlViaUSB=1; //Control stage via USB serial (disables verbose messages via this port)
 bool doGamePad=1; //Set to 1 to enable PS3 DualShock as an input device
 bool doLCD=1; //Set to 1 to enable LCD character display
 
@@ -439,13 +439,9 @@ void setup() {
   if (doSerialInterface){
     if (!controlViaUSB){
        Serial1.begin(115200);
-        SerialComms = &Serial1;
-         SerialComms->println("test");
-
+       SerialComms = &Serial1;
      } else {
-         SerialComms = &Serial;
-         SerialComms->println("test");
-
+        SerialComms = &Serial;
      }
   } //if doSerialInterface
 
@@ -658,7 +654,7 @@ void loop() {
   //Move based on serial commands 
   if (doSerialInterface){
     if (SerialComms->available()){
-        char ch=Serial1.read(); //read first character
+        char ch=SerialComms->read(); //read first character
         if (ch=='g') //Absolute and relative motion
           serialMove(); 
         if (ch=='m') //Set speed mode on DualShock
@@ -678,7 +674,7 @@ void loop() {
         if (ch=='b') //Issue beep from controller
           serialBeep();
 
-        Serial1.flush();
+       SerialComms->flush();
     }
   }
 
