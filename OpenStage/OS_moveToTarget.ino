@@ -42,7 +42,7 @@ void moveToTarget(float target[]){
   
     stepsToTake[ii]=round(intendedMove[ii]/oneStep[ii]); //total number of steps we have to take
 
-    if (verbose){
+    if (verbose && !controlViaUSB){
       Serial.print(ii+1);
       Serial.print(". Targ: ");
       Serial.print(target[ii]);
@@ -79,7 +79,7 @@ void moveToTarget(float target[]){
 
 
   //Now run the steppers until they get there
-  if (verbose){
+  if (verbose && !controlViaUSB){
     Serial.println("Moving");
   }
 
