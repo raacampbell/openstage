@@ -12,8 +12,8 @@ int readSerialCSV(){
 
   char ch;
   while (ch != '$'){ //read until the terminator ($) is reached
-     if (Serial1.available()){
-         ch = Serial1.read();
+     if (SerialComms->available()){
+         ch = SerialComms->read();
       }else{
          continue;
       }
@@ -44,8 +44,8 @@ int readSerialCSV(){
 void serialMove()
 {
    //Determine if this will be an absolute or relative motion
-   while(Serial1.available() == 0 );//block until char arrives
-   char moveType=Serial1.read();
+   while(SerialComms->available() == 0 );//block until char arrives
+   char moveType=SerialComms->read();
     
    //Define variables
    int doneReading=0; //1 when all axis fields have been read
@@ -65,7 +65,7 @@ void serialMove()
      }
 
     moveToTarget(serialTarget);
-    Serial1.print('$'); //send a dollar, which is the terminator
+    SerialComms->print('$'); //send a dollar, which is the terminator
  
 } //End serialRelativeMove()
 
@@ -79,9 +79,9 @@ void serialSetMode(){
     return;
   }
 
-  while(Serial1.available() == 0 );//block until char arrives
+  while(SerialComms->available() == 0 );//block until char arrives
 
-  char ch = Serial1.read();
+  char ch = SerialComms->read();
       
    if (ch=='1')
      coarseFine=1;
@@ -125,12 +125,12 @@ void zeroStage(){
 void tellPosition(){
 
   for (byte ii=0; ii<numAxes; ii++){
-    Serial1.print(stagePosition[ii]);
+    SerialComms->print(stagePosition[ii]);
     if (ii<numAxes-1)
-      Serial1.print(",");
+      SerialComms->print(",");
   }
   
-  Serial1.print("$");
+  SerialComms->print("$");
      
 } //End tell position
 
@@ -139,16 +139,16 @@ void tellPosition(){
 // * set or report the moveToStepSize
 // "ss" sets the step size and "sr" reports it
 void serial_moveToStepSize(){
-  while(Serial1.available() == 0 ){}//block until char arrives
-  char ch = Serial1.read();  
+  while(SerialComms->available() == 0 ){}//block until char arrives
+  char ch = SerialComms->read();  
 
   if (ch=='r'){
-    Serial1.print(moveToStepSize);
-    Serial1.print("$");
+    SerialComms->print(moveToStepSize);
+    SerialComms->print("$");
   }
   if (ch=='s'){
-    while(Serial1.available() == 0 ); //block until char arrives
-    char ch = Serial1.read();  
+    while(SerialComms->available() == 0 ); //block until char arrives
+    char ch = SerialComms->read();  
     
     if (ch=='1')
       moveToStepSize=1.0/1.0;
@@ -168,16 +168,16 @@ void serial_moveToStepSize(){
 // * set or report the moveTo speeds (microns per second)
 // "vs" sets the step size and "vr" reports it
 void serial_moveToSpeed(){
-  while(Serial1.available() == 0 ); //block until char arrives
-  char ch = Serial1.read();  
+  while(SerialComms->available() == 0 ); //block until char arrives
+  char ch = SerialComms->read();  
 
   if (ch=='r'){
    for (byte ii=0; ii<numAxes; ii++){
-    Serial1.print(moveToSpeed[ii]);
+    SerialComms->print(moveToSpeed[ii]);
     if (ii<numAxes-1)
-      Serial1.print(",");
+      SerialComms->print(",");
     }
-      Serial1.print("$");
+      SerialComms->print("$");
    }
  
   if (ch=='s'){
@@ -194,16 +194,16 @@ void serial_moveToSpeed(){
 // * set or report the moveTo accelerations (steps / s^2)
 // "as" sets the step size and "ar" reports it
 void serial_moveToAccel(){
-  while(Serial1.available() == 0 ); //block until char arrives
-  char ch = Serial1.read();  
+  while(SerialComms->available() == 0 ); //block until char arrives
+  char ch = SerialComms->read();  
 
   if (ch=='r'){
    for (byte ii=0; ii<numAxes; ii++){
-    Serial1.print(moveToAccel[ii]);
+    SerialComms->print(moveToAccel[ii]);
     if (ii<numAxes-1)
-      Serial1.print(",");
+      SerialComms->print(",");
     }
-      Serial1.print("$");
+      SerialComms->print("$");
    }
  
   if (ch=='s'){
@@ -222,48 +222,48 @@ void serial_moveToAccel(){
 void reportInfo(){
   byte ii;
 
-  Serial1.print("Gear Ratios: ");
+  SerialComms->print("Gear Ratios: ");
   for (ii=0; ii<numAxes; ii++){
-    Serial1.print(gearRatio[ii]);
+    SerialComms->print(gearRatio[ii]);
     if (ii<numAxes-1)
-       Serial1.print(",");
+       SerialComms->print(",");
     }
-    Serial1.print('\n');
+    SerialComms->print('\n');
 
-  Serial1.print("Full Steps Per Rev: ");
+  SerialComms->print("Full Steps Per Rev: ");
   for (ii=0; ii<numAxes; ii++){
-    Serial1.print(int(1/(fullStep[ii]/360.0)));
+    SerialComms->print(int(1/(fullStep[ii]/360.0)));
     if (ii<numAxes-1)
-       Serial1.print(",");
+       SerialComms->print(",");
    }
-    Serial1.print('\n');
+    SerialComms->print('\n');
 
-  Serial1.print("Hat Stick max speeds: ");
+  SerialComms->print("Hat Stick max speeds: ");
   for (ii=0; ii<4; ii++){
-    Serial1.print(maxSpeed[ii]);
+    SerialComms->print(maxSpeed[ii]);
     if (ii<3)
-       Serial1.print(",");
+       SerialComms->print(",");
   }
-  Serial1.print('\n');
-  Serial1.print('\n');
+  SerialComms->print('\n');
+  SerialComms->print('\n');
   
-  Serial1.print("moveTo() speeds:");
-  Serial1.print('\n');
+  SerialComms->print("moveTo() speeds:");
+  SerialComms->print('\n');
   for (ii=0; ii<numAxes; ii++){
-    Serial1.print(ii+1);
-    Serial1.print(". Speed [um/s]: ");
-    Serial1.print(moveToSpeed[ii]);
-    Serial1.print(".  RPM: ");
-    Serial1.print(int(60 * (moveToSpeed[ii]/(gearRatio[ii]*1.0))));
-    Serial1.print(";  min step [um]: ");
-    Serial1.print(fullStep[ii]/360.0*gearRatio[ii]*moveToStepSize);
-    Serial1.print(";  pulse rate [Hz]: ");
-    Serial1.print(short(moveToSpeed[ii] / ((fullStep[ii]/360) * moveToStepSize * gearRatio[ii])));
+    SerialComms->print(ii+1);
+    SerialComms->print(". Speed [um/s]: ");
+    SerialComms->print(moveToSpeed[ii]);
+    SerialComms->print(".  RPM: ");
+    SerialComms->print(int(60 * (moveToSpeed[ii]/(gearRatio[ii]*1.0))));
+    SerialComms->print(";  min step [um]: ");
+    SerialComms->print(fullStep[ii]/360.0*gearRatio[ii]*moveToStepSize);
+    SerialComms->print(";  pulse rate [Hz]: ");
+    SerialComms->print(short(moveToSpeed[ii] / ((fullStep[ii]/360) * moveToStepSize * gearRatio[ii])));
     if (ii<numAxes-1)
-      Serial1.print('\n');
+      SerialComms->print('\n');
   }
   
-  Serial1.print("$");
+  SerialComms->print("$");
 } //End reportInfo
 
 

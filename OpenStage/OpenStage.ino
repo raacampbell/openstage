@@ -435,7 +435,14 @@ void setup() {
   // during testing. [In future we will add the option for controlling the stage through
   // the USB port]
   Serial.begin(115200);
-
+  if (doSerialInterface){
+    if (!controlViaUSB){
+       Serial1.begin(115200);
+       SerialComms = &Serial1;
+     } else {
+        SerialComms = &Serial;
+     }
+  } //if doSerialInterface
 
 
   //Set the micro-step pins as outputs
@@ -646,8 +653,9 @@ void loop() {
 
   //Move based on serial commands 
   if (doSerialInterface){
-    if (Serial1.available()){
-        char ch=Serial1.read(); //read first character
+
+    if (SerialComms->available()){
+        char ch=SerialComms->read(); //read first character
         if (ch=='g') //Absolute and relative motion
           serialMove(); 
         if (ch=='m') //Set speed mode on DualShock
@@ -667,7 +675,7 @@ void loop() {
         if (ch=='b') //Issue beep from controller
           serialBeep();
 
-        Serial1.flush();
+       SerialComms->flush();
     }
   }
 
