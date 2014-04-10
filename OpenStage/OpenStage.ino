@@ -423,7 +423,9 @@ long values[numAxes]; // array holding values for all the received fields from t
 //
 // The setup function performs basic operations such as defining the DIO direction of each pin, 
 // connecting to a serial device, etc. 
-  
+
+HardwareSerial* SerialComms;
+
 void setup() {
 
   //Initialise loop counters
