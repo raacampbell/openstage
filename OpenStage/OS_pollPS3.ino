@@ -127,7 +127,6 @@ int pollPS3(){
         }
       
       
-      Serial.println(' ');
       beep(7750,0.16);
       beep(500,0.20);
       locationStored[ii]=1; //flag that a location is bound to this button
