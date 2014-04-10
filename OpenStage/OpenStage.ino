@@ -423,7 +423,9 @@ long values[numAxes]; // array holding values for all the received fields from t
 //
 // The setup function performs basic operations such as defining the DIO direction of each pin, 
 // connecting to a serial device, etc. 
-  
+HardwareSerial* SerialComms;
+#define HARDWARE_SERIAL_PORT Serial1
+
 void setup() {
 
   //Initialise loop counters
@@ -438,7 +440,7 @@ void setup() {
   Serial.begin(115200);
   if (doSerialInterface){
     if (!controlViaUSB){
-       Serial1.begin(115200);
+       HARDWARE_SERIAL_PORT.begin(115200);
        SerialComms = &Serial1;
      } else {
         SerialComms = &Serial;
@@ -576,9 +578,7 @@ void setup() {
     setupLCD();//Print axis names to LCD
   } //if doLCD
 
-  if (doSerialInterface){
-     Serial1.begin(115200);
-  } //if doSerialInterface
+
 }//End of setup function 
 
 
