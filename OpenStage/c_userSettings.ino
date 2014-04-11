@@ -51,7 +51,7 @@ const byte numAxes=1; //Set this to the number of axes on you system
 // Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent. 
 // e.g. if you have one axis the following vector might be {1,0,0,0} Although {0,1,0,0} should 
 // also work
-bool axisPresent[maxAxes]={1,1,1,0}; 
+bool axisPresent[maxAxes]={1,0,0,0}; 
 
 
 // gearRatio
