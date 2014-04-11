@@ -8,6 +8,7 @@
 
 
 
+#if doLCD
 //------------------------------------------------------------------------------------------------
 // * lcdStagePos
 // Show position of selected axis on LCD display
@@ -58,7 +59,7 @@ void setupLCD(){
       lcd.print(" ");
      }
 } //End setupLCD()
-
+#endif
 
 //------------------------------------------------------------------------------------------------
 // * updateStagePos
@@ -101,7 +102,10 @@ void dButtonMove(int axis, int direction){
   //Update the stage position
   updateStagePos(axis,move,DPadStepSize);
   stepperPreviousPos[axis]=(*mySteppers[axis]).currentPosition();
+  
+  #if doLCD
   lcdStagePos(axis,stagePosition[axis],-1);
+  #endif
 
   //Tidy up
   setStep(stepSize[coarseFine-1]);
@@ -111,8 +115,10 @@ void dButtonMove(int axis, int direction){
     digitalWrite(enable[axis],HIGH);
 
   digitalWrite(stageLEDs[axis],LOW);   
-  setupLCD();//run here just in case this gets corrupted from time to time
 
+  #if doLCD
+  setupLCD();//run here just in case this gets corrupted from time to time
+  #endif
 
 } //End dButtonMove()
 

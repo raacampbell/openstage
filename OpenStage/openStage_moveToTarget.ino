@@ -16,20 +16,22 @@ void moveToTarget(float target[]){
  
  
   
-  if (doGamePad){     
+  #if doGamePad
     PS3.setAllOff(); //Switch off the LEDs to indicate that we're making a non-manual motion
-  }
+  #endif
 
   float oneStep[numAxes]; //how far one step takes us
   long stepsToTake[numAxes]; //how many steps to take on each axis
 
 
   for (ii=0; ii<numAxes; ii++){
-    if (!axisPresent[ii])
+    if (!axisPresent[ii]){
       continue;
-   
+    }
+
     intendedMove[ii]=target[ii]-stagePosition[ii]; //How far we need to move
-/*
+  
+  /*
     //compensate for backlash
     if (intendedMove[ii]<0 && digitalRead(stepDir[ii])==1)
        intendedMove[ii]=intendedMove[ii]-0.32; //the measured backlash in z
@@ -94,9 +96,11 @@ void moveToTarget(float target[]){
   for (ii=0; ii<numAxes; ii++){
      if (!axisPresent[ii])
        continue;
-   
+       
+       #if doLCD
        lcdStagePos(ii,stagePosition[ii],0);
-    
+       #endif
+
        stepperPreviousPos[ii]=(*mySteppers[ii]).currentPosition();
        (*mySteppers[ii]).setAcceleration(0);
        (*mySteppers[ii]).setSpeed(0);

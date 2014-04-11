@@ -48,13 +48,12 @@ void setup() {
 
 
 
-
   //Initialise the 20 by 4 LCD display 
-  if (doLCD){
+  #if doLCD==1
    lcd.begin(20,4);               
    lcd.home ();                   
    lcd.clear();
-  }
+  #endif
 
   // Connect to the USB Shield
   if (doGamePad){
@@ -62,15 +61,15 @@ void setup() {
       Serial.print(F("\r\nConnection to USB shield failed"));
     
       //halt and flash warning
-      if (doLCD){
-        while(1){ //infinite while loop
-           lcd.setCursor (0, 1);   
-           lcd.print (" No USB connection!");
-           delay(1000);
-           lcd.clear();
-           delay(1000);
-         }// while
-      }  
+      #if doLCD==1
+      while(1){ //infinite while loop
+       lcd.setCursor (0, 1);   
+       lcd.print (" No USB connection!");
+       delay(1000);
+       lcd.clear();
+       delay(1000);
+      }// while
+      #endif  
     }//if USB.init 
 
      //Pre-calculate the speeds for different hat-stick values. This moves these
@@ -86,11 +85,11 @@ void setup() {
   
 
   //Display boot message on LCD screen  
-  if (doLCD){
+  #if doLCD
    lcd.setCursor (0,0);   
    lcd.print ("Booting OpenStage");
    lcd.setCursor (0,1);   
-  }
+  #endif
 
 
  
@@ -113,9 +112,9 @@ void setup() {
     for (ii=1; ii<10; ii++){
       Usb.Task(); 
       delay(100); 
-      if (doLCD){
-        lcd.print(".");
-      } //if doLCD
+      #if doLCD
+       lcd.print(".");
+      #endif
      } //for loop
     setPSLEDS(); //Set the LEDs on the DualShock to the correct states
   } //if doGamePad
@@ -136,20 +135,20 @@ void setup() {
   //stage will move by itself.
   if (doGamePad){ 
     while (PS3.getAnalogHat(LeftHatX)==0){
-      if (doLCD){
+      #if doLCD
         lcd.setCursor(0,1);
         lcd.print("Connect DualShock");
         lcd.setCursor(0,2);
         lcd.print("And Re-Boot");
-     } //if doLCD
+      #endif
     } //while PS3
   } //if doGamePad
   
-  if (doLCD){
+  #if doLCD
     lcd.clear();
     lcd.home();
     setupLCD();//Print axis names to LCD
-  } //if doLCD
+  #endif
 
 
 }//End of setup function 

@@ -25,11 +25,12 @@ void loop() {
     n=0;
   }
 
+  #if doLCD
   //Updating the LCD creates some motor choppiness at the faster speeds.
   //With the current parameters, the motor stalls or is not smooth at
   //faster motions if the LCD display is being updated. So no updates 
   //at this speed. 
-  if (doLCD && lcdCounter++ == lcdCycles+lcdAxisTimer) {
+  if (lcdCounter++ == lcdCycles+lcdAxisTimer) {
     
       if (coarseFine<4 || moving==0){
           lcdStagePos(lcdAxis,stagePosition[lcdAxis],currentSpeed[lcdAxis]);
@@ -44,18 +45,19 @@ void loop() {
         lcdCounter=0;
       }
   } //if lcdCounter
+  #endif
 
 
-  if (doGamePad){
+  #if doGamePad
     //Move motors based on hat-stick positions
     for (byte ii=0; ii<numAxes; ii++){
        (*mySteppers[ii]).runSpeed();
     }
-  } //if doGamePad
+  #endif
 
 
   //Move based on serial commands 
-  if (doSerialInterface){
+  #if doSerialInterface
 
     if (SerialComms->available()){
         char ch=SerialComms->read(); //read first character
@@ -80,7 +82,7 @@ void loop() {
 
        SerialComms->flush();
     }
-  }
+  #endif
 
 }//End loop()
 

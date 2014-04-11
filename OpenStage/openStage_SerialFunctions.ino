@@ -119,7 +119,9 @@ void zeroStage(){
   for (byte ii=0; ii<numAxes; ii++){
     delta[ii]=stagePosition[ii];
     stagePosition[ii]=0;
+    #if doLCD
     lcdStagePos(ii,stagePosition[ii],0);
+    #endif
   }  
   
   for (byte ii=0; ii<4; ii++){
