@@ -5,8 +5,8 @@
 //------------------------------------------------------------------------------------------------
 // * Enable/disable major OpenStage functions 
 //
-bool doGamePad=0; //Set to 1 to enable PS3 DualShock as an input device
-bool doLCD=0;     //Set to 1 to enable LCD character display
+//#define DO_LCD      //Uncomment this line to enable enable LCD character display
+//#define DO_GAMEPDAD //Uncomment this line to enable PS3 DualShock as an input device
 
 
 
@@ -21,15 +21,17 @@ bool doLCD=0;     //Set to 1 to enable LCD character display
 // 3) Disable serial comms for stage control. 
 //
 // These three possibilities are controlled by altering the following two variables:
-bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
+#define DO_SERIAL_INTERFACE
 bool controlViaUSB=1;     //Set to 1 to control via USB. See setup() for serial port IDs.
 
 //If using PC serial port, this is the ID of the MEGA's hardware serial line (e.g. Serial3)
 //If using an Uno, or another mic with no hardware serial, then this should be set to "Serial"
 #define HARDWARE_SERIAL_PORT Serial 
+HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
-
-
+#ifdef DO_SERIAL_INTERFACE
+ bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
+#endif
 
 
 //------------------------------------------------------------------------------------------------
@@ -50,7 +52,7 @@ const byte numAxes=1; //Set this to the number of axes on you system
 // Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent. 
 // e.g. if you have one axis the following vector might be {1,0,0,0} Although {0,1,0,0} should 
 // also work
-bool axisPresent[maxAxes]={1,1,1,0}; 
+bool axisPresent[maxAxes]={1,0,0,0}; 
 
 
 // gearRatio
@@ -82,22 +84,22 @@ bool disableWhenStationary[maxAxes]={0,0,0,0};
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[maxAxes]={3,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
+byte stepOut[maxAxes]={11,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[maxAxes]={2,25,27,0}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={12,25,27,0}; //Ordered X, Y, and Z
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[maxAxes]={4,29,30,0}; //Ordered X, Y, and Z
+byte enable[maxAxes]={3,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=5;
-byte MS2=6;
-byte MS3=7;
+byte MS1=4;
+byte MS2=5;
+byte MS3=6;
 
 
 
