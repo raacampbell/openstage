@@ -107,17 +107,8 @@ byte MS3=6;
 
 //------------------------------------------------------------------------------------------------
 // * AccelStepper 
-// Set up three AccelStepper instances for managing the three axes of motion. There are are a 
-// couple of other ways to issue steps and keep track of the stage position. 
-// 1. Software pulse generation and software stage position counters
-// 2. Hardware timer pulse generation and hardware counter for step pulses. 
-// AccelStepper does a good job and makes the code more compact so we've gone with it.
-AccelStepper stepperX(1, stepOut[0], stepDir[0]); 
-//AccelStepper stepperY(1, stepOut[1], stepDir[1]); 
-//AccelStepper stepperZ(1, stepOut[2], stepDir[2]); 
-
 //Make an array of pointers to the AccelStepper instances to make loops possible
-AccelStepper *mySteppers[numAxes]={&stepperX};//, &stepperY, &stepperZ};
+AccelStepper *mySteppers[numAxes];
 
 
 

@@ -5,6 +5,25 @@ void setup() {
   pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
   pinMode(beepPin,OUTPUT); //Produce sound on this pin
 
+  // Set up the requred AccelStepper instances (one per axis)
+  if (axisPresent[0]){
+    AccelStepper stepperX(1, stepOut[0], stepDir[0]); 
+    mySteppers[0] = &stepperX;
+  }
+  if (axisPresent[1]){
+    AccelStepper stepperY(1, stepOut[1], stepDir[1]); 
+    mySteppers[1] = &stepperY;
+  }
+  if (axisPresent[2]){
+    AccelStepper stepperZ(1, stepOut[2], stepDir[2]); 
+    mySteppers[2] = &stepperZ;
+  }
+  if (axisPresent[3]){
+    AccelStepper stepperA(1, stepOut[3], stepDir[3]); 
+    mySteppers[3] = &stepperA;
+  }
+
+
   // Connect to the PC's serial port via the Arduino programming USB connection. 
   // This used mainly for printing de-bugging information to the PC's serial terminal
   // during testing. [In future we will add the option for controlling the stage through
