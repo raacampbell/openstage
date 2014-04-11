@@ -119,30 +119,30 @@ void runSteppersToPos(){
   bool keepMoving=1;
   bool axisFinished[numAxes];
   
-  for (int ii=0; ii<numAxes; ii++){
+  for (byte ii=0; ii<numAxes; ii++){
     axisFinished[ii]=1;
   }
   
   if (verbose){
     Serial.println("Entering while loop in runSteppersToPos()");
   }
-  
+
   while (keepMoving){
-    
+
     keepMoving=0;
-    for (int ii=0; ii<numAxes; ii++){
+    for (byte ii=0; ii<numAxes; ii++){
       if (!axisPresent[ii]){
         continue;
       }
-
       if ((*mySteppers[ii]).distanceToGo() != 0){
          keepMoving=1;
          axisFinished[ii]=0;         
       } 
     }
     
+
     //Motion is a touch faster if we place run code here
-    for (int ii=0; ii<numAxes; ii++){
+    for (byte ii=0; ii<numAxes; ii++){
       if (axisFinished[ii] || !axisPresent[ii]){
         continue;
       }
