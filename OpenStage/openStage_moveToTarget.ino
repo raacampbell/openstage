@@ -16,7 +16,7 @@ void moveToTarget(float target[]){
  
  
   
-  #if doGamePad
+  #ifdef DO_GAMEPAD
     PS3.setAllOff(); //Switch off the LEDs to indicate that we're making a non-manual motion
   #endif
 
@@ -89,15 +89,13 @@ void moveToTarget(float target[]){
 
   //Return LEDs and Big Easy Drivers to previously selected step size
   //This also re-calculates the step size (which we re-defined above).
-  if (doGamePad){
-    setPSLEDS();
-  }
+  setPSLEDS();
   
   for (ii=0; ii<numAxes; ii++){
      if (!axisPresent[ii])
        continue;
        
-       #if doLCD
+       #ifdef DO_LCD
        lcdStagePos(ii,stagePosition[ii],0);
        #endif
 

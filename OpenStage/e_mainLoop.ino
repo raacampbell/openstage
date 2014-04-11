@@ -1,11 +1,10 @@
 
 void loop() {
   //Define main loop static variables
-  static bool moving=0; //0 if stationary moving; 1 more than one axis is moving (this isn't a user setting)
+  static bool moving=0; //0 if stationary moving
 
   // Polling the USB Host Shield to which the PS3 controller is connected takes time, so we don't
-  // do it on every pass through the loop. About 30 to 50 times per second is adequate. In other words,
-  // we read the positions of the analog sticks, the button states, etc, at about these rates.
+  // do it on every pass through the loop. About 30 to 50 times per second is adequate. 
   static unsigned short n=0;          //Counter to implement the periodic polling of the DualShock
   static unsigned short nCycles=3000; //The DualShock is polled on every "nCycles" passses through the loop. 
 
@@ -17,15 +16,15 @@ void loop() {
   static unsigned short lcdAxisTimer=0; //counter to update axes on different cycles
 
 
-
-
   //Poll DualShock
-  if (doGamePad && ++n == nCycles){
+  #ifdef DO_GAMEPAD
+  if (++n == nCycles){
     moving=pollPS3();  
     n=0;
   }
+  #endif
 
-  #if doLCD
+  #ifdef DO_LCD
   //Updating the LCD creates some motor choppiness at the faster speeds.
   //With the current parameters, the motor stalls or is not smooth at
   //faster motions if the LCD display is being updated. So no updates 
@@ -48,16 +47,15 @@ void loop() {
   #endif
 
 
-  #if doGamePad
+  #ifdef DO_GAMEPAD
     //Move motors based on hat-stick positions
     for (byte ii=0; ii<numAxes; ii++){
        (*mySteppers[ii]).runSpeed();
     }
   #endif
 
-
   //Move based on serial commands 
-  #if doSerialInterface
+  #ifdef DO_SERIAL_INTERFACE
 
     if (SerialComms->available()){
         char ch=SerialComms->read(); //read first character
@@ -79,7 +77,7 @@ void loop() {
           reportInfo();
         if (ch=='b') //Issue beep from controller
           serialBeep();
-
+        
        SerialComms->flush();
     }
   #endif

@@ -89,6 +89,7 @@ void serialMove()
 // * serialSetMode
 // Set speed mode on the DualShock
 void serialSetMode(){
+  #ifdef DO_GAMEPAD
   if (!doGamePad){
     return;
   }
@@ -107,6 +108,7 @@ void serialSetMode(){
      coarseFine=4;
      
    setPSLEDS();
+  #endif
 } //End serialSetMode()
 
 

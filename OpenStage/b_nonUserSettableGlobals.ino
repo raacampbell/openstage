@@ -4,7 +4,6 @@
 //---------------------------------NON USER GLOBALS-----------------------------------------------
 //The following variables aren't user settings. They are counters, etc 
 
-HardwareSerial* SerialComms;  //pointer to stage comms serial object
 const byte maxAxes=4; //None of our stages will ever have more than 4 axes. 
 
 

@@ -1,10 +1,9 @@
 
 void setup() {
 
-  //Initialise loop counters
-  byte ii; 
-  byte jj;
-
+ 
+  pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
+  pinMode(beepPin,OUTPUT); //Produce sound on this pin
 
   // Connect to the PC's serial port via the Arduino programming USB connection. 
   // This used mainly for printing de-bugging information to the PC's serial terminal
@@ -16,7 +15,7 @@ void setup() {
        HARDWARE_SERIAL_PORT.begin(115200);
        SerialComms = &HARDWARE_SERIAL_PORT;
      } else {
-        SerialComms = &HARDWARE_SERIAL_PORT;
+       SerialComms = &HARDWARE_SERIAL_PORT;
      }
   } //if doSerialInterface
 
@@ -28,7 +27,7 @@ void setup() {
 
 
   //Set up motor control pins, LED pins, etc, as output lines
-  for (ii=0; ii<numAxes; ii++){
+  for (byte ii=0; ii<numAxes; ii++){
     if (!axisPresent[ii]) //Skip axes that aren't present 
       continue;
     
@@ -41,27 +40,26 @@ void setup() {
     digitalWrite(enable[ii],LOW);//power to motors
   } 
 
-  for (ii=0; ii<4; ii++){
+  for (byte ii=0; ii<4; ii++){
     pinMode(stageLEDs[ii],OUTPUT);
     digitalWrite(stageLEDs[ii],LOW);
   }
 
 
-
   //Initialise the 20 by 4 LCD display 
-  #if doLCD==1
+  #ifdef DO_LCD
    lcd.begin(20,4);               
    lcd.home ();                   
    lcd.clear();
   #endif
 
   // Connect to the USB Shield
-  if (doGamePad){
+  #ifdef DO_GAMEPDAD
     if (Usb.Init() == -1) {
       Serial.print(F("\r\nConnection to USB shield failed"));
     
       //halt and flash warning
-      #if doLCD==1
+      #ifdef DO_LCD
       while(1){ //infinite while loop
        lcd.setCursor (0, 1);   
        lcd.print (" No USB connection!");
@@ -70,35 +68,34 @@ void setup() {
        delay(1000);
       }// while
       #endif  
-    }//if USB.init 
+    }
+
 
      //Pre-calculate the speeds for different hat-stick values. This moves these
      //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
-     for (ii=0; ii<128; ii++){
-       for (jj=0; jj<4; jj++){         
+     for (byte ii=0; ii<128; ii++){
+       for (byte jj=0; jj<4; jj++){         
           //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
           SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
        }  
      }
 
-  }//if doGamePad
+  #endif
   
 
   //Display boot message on LCD screen  
-  #if doLCD
+  #ifdef DO_LCD
    lcd.setCursor (0,0);   
    lcd.print ("Booting OpenStage");
    lcd.setCursor (0,1);   
   #endif
 
 
- 
-   
 
   //the variable thisStep can take on one of four values for each axis
   //Calculate all of these here
-  for (ii=0; ii<numAxes; ii++){
-    for (jj=0; jj<4; jj++){
+  for (byte ii=0; ii<numAxes; ii++){
+    for (byte jj=0; jj<4; jj++){
       if (axisPresent[ii]){
            thisStep[ii][jj] = (fullStep[ii]/360) * stepSize[jj] * gearRatio[ii];
       } //if axisPresent
@@ -106,45 +103,42 @@ void setup() {
   } //ii for loop
 
 
-  if (doGamePad){
+  #ifdef DO_GAMEPDAD
     // Poll the USB interface a few times. Failing to do this causes the motors to move during 
     // following a rest. I don't know why the following code fixes this, but it does. 
-    for (ii=1; ii<10; ii++){
+    for (byte ii=1; ii<10; ii++){
       Usb.Task(); 
       delay(100); 
-      #if doLCD
+      #ifdef DO_LCD
        lcd.print(".");
       #endif
      } //for loop
     setPSLEDS(); //Set the LEDs on the DualShock to the correct states
-  } //if doGamePad
+  #endif
 
 
   //Set default values for the AccelStepper instances
-  for (ii=0; ii<numAxes; ii++){
+  for (byte ii=0; ii<numAxes; ii++){
     (*mySteppers[ii]).setMaxSpeed(4.0E3); //The max the Arduino Mega is capable of 
     (*mySteppers[ii]).setAcceleration(0); //Must be zero to allow hat stick speed motions
   }
 
 
-  pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
-  pinMode(beepPin,OUTPUT); //Produce sound on this pin
-
   //An analog stick value of zero likely means that the controller is not connected. 
   //If the game pad is enabled, don't proceed until a contoller is found, or the 
   //stage will move by itself.
-  if (doGamePad){ 
+  #ifdef DO_GAMEPDAD
     while (PS3.getAnalogHat(LeftHatX)==0){
-      #if doLCD
+      #ifdef DO_LCD
         lcd.setCursor(0,1);
         lcd.print("Connect DualShock");
         lcd.setCursor(0,2);
         lcd.print("And Re-Boot");
       #endif
     } //while PS3
-  } //if doGamePad
+  #endif
   
-  #if doLCD
+  #ifdef DO_LCD
     lcd.clear();
     lcd.home();
     setupLCD();//Print axis names to LCD
