@@ -1,13 +1,11 @@
-
 // Some global definitions that need to be modified by the user for the stage to work
 
 
 //------------------------------------------------------------------------------------------------
 // * Enable/disable major OpenStage functions 
 //
-//#define DO_LCD      //Uncomment this line to enable enable LCD character display
-//#define DO_GAMEPDAD //Uncomment this line to enable PS3 DualShock as an input device
-
+#define DO_LCD      //Uncomment this line to enable enable LCD character display
+#define DO_GAMEPDAD //Uncomment this line to enable PS3 DualShock as an input device
 
 
 
@@ -21,16 +19,14 @@
 // 3) Disable serial comms for stage control. 
 //
 // These three possibilities are controlled by altering the following two variables:
-const bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
-const bool controlViaUSB=1;     //Set to 1 to control via USB. See setup() for serial port IDs.
- 
-//If using PC serial port, this is the ID of the MEGA's hardware serial line (e.g. Serial3)
-//If using an Uno, or another mic with no hardware serial, then this should be set to "Serial"
-#define HARDWARE_SERIAL_PORT Serial 
+bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
+bool controlViaUSB=0;     //Set to 1 to control via USB. See setup() for serial port IDs.
+#define HARDWARE_SERIAL_PORT Serial1 //If using PC serial port, this is the ID of the MEGA's hardware serial line 
+
+
 HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
 #define DO_SERIAL_INTERFACE
-
 
 
 //------------------------------------------------------------------------------------------------
@@ -45,13 +41,13 @@ HardwareSerial* SerialComms;  //pointer to stage comms serial object
 // The properties of each axis are defined as separate variables (mostly arrays with a length 
 // equal to the number of axes). You can have up 4 axes. 
 
-const byte numAxes=1; //Set this to the number of axes on you system 
+const byte numAxes=3; //Set this to the number of axes on you system 
 
 // axisPresent
 // Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent. 
 // e.g. if you have one axis the following vector might be {1,0,0,0} Although {0,1,0,0} should 
 // also work
-bool axisPresent[maxAxes]={1,0,0,0}; 
+bool axisPresent[maxAxes]={1,1,1,0}; 
 
 
 // gearRatio
@@ -83,22 +79,22 @@ bool disableWhenStationary[maxAxes]={0,0,0,0};
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[maxAxes]={3,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
+byte stepOut[maxAxes]={22,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[maxAxes]={2,25,27,0}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={23,25,27,0}; //Ordered X, Y, and Z
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[maxAxes]={4,29,30,0}; //Ordered X, Y, and Z
+byte enable[maxAxes]={28,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=5;
-byte MS2=6;
-byte MS3=7;
+byte MS1=45;
+byte MS2=47;
+byte MS3=49;
 
 
 
@@ -112,11 +108,11 @@ byte MS3=7;
 // 2. Hardware timer pulse generation and hardware counter for step pulses. 
 // AccelStepper does a good job and makes the code more compact so we've gone with it.
 AccelStepper stepperX(1, stepOut[0], stepDir[0]); 
-//AccelStepper stepperY(1, stepOut[1], stepDir[1]); 
-//AccelStepper stepperZ(1, stepOut[2], stepDir[2]); 
+AccelStepper stepperY(1, stepOut[1], stepDir[1]); 
+AccelStepper stepperZ(1, stepOut[2], stepDir[2]); 
 
 //Make an array of pointers to the AccelStepper instances to make loops possible
-AccelStepper *mySteppers[numAxes]={&stepperX};//, &stepperY, &stepperZ};
+AccelStepper *mySteppers[numAxes]={&stepperX, &stepperY, &stepperZ};
 
 
 
@@ -127,7 +123,7 @@ AccelStepper *mySteppers[numAxes]={&stepperX};//, &stepperY, &stepperZ};
 // * Outputs
 // The following are pin definitions of controller outputs. These signal information to the user
 
-byte beepPin=10; //Set this to the pin to which the Piezo buzzer is connected 
+byte beepPin=9; //Set this to the pin to which the Piezo buzzer is connected 
 
 // stageLEDs
 // LEDs will light when the stage moves or an axis is reset, 
@@ -143,8 +139,7 @@ byte beepPin=10; //Set this to the pin to which the Piezo buzzer is connected
 // PC1: 36 (Y axis)
 // PC2: 35 (Z axis)
 // PC3: 34 (a good idea to reserve this for a 4th axis, such as a PIFOC)
-byte stageLEDs[maxAxes]={12,36,35,35};
-
+byte stageLEDs[4]={37,36,35,35};
 
 
 // Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
@@ -156,14 +151,11 @@ byte stageLEDs[maxAxes]={12,36,35,35};
 
 
 
+
 //------------------------------------------------------------------------------------------------
 // PS3 Controller speed settings
 // The following settings define how the PS3 controller will control the stage. If you don't have a
 // PS3 controller, you can ignore the following 
-#ifdef DO_GAMEPDAD
-USB Usb;
-PS3USB PS3(&Usb); // The PS3USB class is used read the state of the DualShock. 
-#endif
 
 // * Speed modes (hat-stick)
 //
@@ -196,7 +188,7 @@ float stepSize[4]={1/16.0, 1/8.0, 1/4.0, 1/2.0}; //Defined in fractions of a ful
 float DPadStep[4]={3,5,10,50}; 
 float DPadStepSize=1/2.0;
 // Acceleration in X, Y, and Z
-unsigned long DPadAccel[maxAxes]={1.0E4, 1.0E4, 1.0E4, 1.0E4};
+unsigned long DPadAccel[numAxes]={1.0E4, 1.0E4, 1.0E4};
 
 // * moveTo speeds
 //

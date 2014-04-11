@@ -32,7 +32,7 @@ function OS=connectOpenStage(DEV)
 
 
 if nargin==0
-    DEV='COM4'; %Might want to modify this to your default port
+    DEV='COM12'; %Might want to modify this to your default port
 end
 
 delete(instrfind({'Port'},{DEV}))
