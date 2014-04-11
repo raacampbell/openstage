@@ -3,12 +3,6 @@
 // Some global definitions that need to be modified by the user for the stage to work
 
 
-
-
-// Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
-LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
-
-
 //------------------------------------------------------------------------------------------------
 // * Enable/disable major OpenStage functions 
 //
@@ -150,6 +144,11 @@ byte beepPin=9; //Set this to the pin to which the Piezo buzzer is connected
 // PC3: 34 (a good idea to reserve this for a 4th axis, such as a PIFOC)
 byte stageLEDs[4]={37,36,35,35};
 
+
+// Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
+#if doLCD
+   LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
+#endif
 
 
 
