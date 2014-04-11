@@ -41,6 +41,11 @@ if nargin<3
   nAxes=3;
 end
 
+if length(coords)<nAxes
+  nAxes=length(coords);
+  fprintf('Warning, setting nAxes to %d\n',nAxes);
+end
+
 
 coords=round(coords*1.0E3); 
 
