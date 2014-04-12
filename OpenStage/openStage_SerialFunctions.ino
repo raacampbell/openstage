@@ -90,9 +90,6 @@ void serialMove()
 // Set speed mode on the DualShock
 void serialSetMode(){
   #ifdef DO_GAMEPAD
-  if (!doGamePad){
-    return;
-  }
 
   while(SerialComms->available() == 0 );//block until char arrives
 
