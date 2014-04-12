@@ -1,5 +1,7 @@
 
 // Some global definitions that need to be modified by the user for the stage to work
+// This file is set up for a single-stage solution with an Arduino Uno in mind. No LCD
+// and no game pad. 
 
 
 //------------------------------------------------------------------------------------------------
@@ -56,7 +58,9 @@ bool axisPresent[maxAxes]={1,0,0,0};
 
 
 // gearRatio
-// Micrometer gear ratios on X,Y,Z in microns per revolution. Unused axes can have any number. 
+// Micrometer gear ratios on X,Y,Z in microns per revolution. 
+// NOTE: in this case and all others, unused axes can have any value. Values of unused axes
+// are simply not read.  
 unsigned short gearRatio[maxAxes]={635,635,250,635}; 
 
 
