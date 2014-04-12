@@ -1,11 +1,13 @@
 
+
+ #ifdef DO_GAMEPAD
 //------------------------------------------------------------------------------------------------
 // * pollPS3
 //
 // This the main workhorse function. It polls the PS3 gamepad and responds to user input. 
 
 int pollPS3(){
-
+  
   Usb.Task(); //Performs unknown USB magic
 
   // Counters for right hand buttons. 
@@ -194,4 +196,4 @@ int pollPS3(){
   return moving;
 
 }//End pollPS3()
-    
+#endif  

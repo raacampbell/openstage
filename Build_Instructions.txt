@@ -1,0 +1,117 @@
+Build Instructions
+
+
+
+** Introduction 
+
+If you have not already done so, you should read our PLoS ONE paper that describes both the properties of our stage and provides general instructions on its construction. http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0088977 This document provides more detailed information on exactly how to go about setting up a new stage. 
+
+
+
+
+** Setting up a new motor
+  * * Do Not Connect Motors To Your Stage Until You Have Tested The Assembled Controller * *
+
+The first thing you're going to want to do is verify that you can drive a single motor in a reliable manner. In other words, the motor will return to its starting point when commanded to perform 10 full revolutions counter-clockwise then 10 fill revolutions clockwise. To get to this point, you will need to configure and upload the firmware, wire the circuit for you system, and finally issue serial port commands from a PC and observe the results. 
+
+The minimum parts you will need to achieve this are:
+1. An Arduino. An Uno can be used for basic testing and is adequate for simple single-motor stages. Even if you will ultimately use a Mega, you can start testing on an Uno.
+2. A stepper motor driver board (e.g. a Big Easy Driver)
+3. A power supply adequate for your motor. A lab power supply with a current reading is useful but not critical. 
+4. A USB cable and hook-up wire to connect your prototype system. 
+5. Masking tape, lab tape, or similar. 
+
+A. Installing the firmware on the Arduino 
+The "OpenStage" directory contains the firmware. The firmware is divided up across multiple files. The file which begins "c_userSettings" and ends in ".ino" is the one which contains the user-specific settings which you will need to modify. More than one example file is included and these end in ".BAK" Choose the example that most closely resembles your use scenario. Rename it so it ends in ".ino" Read through the settings file and modify the settings as needed. There must be only one c_userSettings*.ino file in the directory. The .BAK files are ignored during the compile process and can be left in the same directory as the other files. You might want to set up the system so that serial port commands are delivered via the virtual serial port (Arduino programming port), as this initially easier. The Mega has hardware serial ports that can be used for delivering stage motion commands. The advantage of using these is that you can deliver de-bugging messages to the Arduino IDE's serial port viewer via the USB. Once you're satisfied with the settings, upload the firmware to the Arduino via the IDE.
+
+
+B. Wire the system
+Wire up the system based upon the pin definitions you've chosen when you filled in the settings file. Don't forget to wire up the micro-stepping pins. Hook up the motor to the driver board. Set the current-limiting potentiometer on the driver board to the lowest setting and power up the board. If the chip on the driver board gets hot then you've turn the pot the wrong way. 
+
+
+C. Communicate with the stage. 
+Here it is assumed you are using MATLAB and communicating via USB. There are also Python functions and these should work equivalently, although they haven't been well tested. Note the ID of the serial port the Arduino is listening on: the port identity is listed at the bottom right of the Arduino IDE (assuming you have successfully transfered a program to the Arduino). Open the connectOpenStage file and replace the existing port name with your port. Save and close. Issue the OS_beep command. You should see the serial communications light flash on the Arduino, but will not hear a beep unless you have wired up a buzzer. Now let's see if the motor moves. 
+
+Attach a piece of tape to the spindle (like a little flag) to act as a clear visual indicator that the spindle has rotated. We will begin by asking the spindle to rotate by 360 degrees. You want to make sure the spindle always returns to its start position. The gear ratio value you entered in the settings file defines the number of microns per revolution, thus if you ask the motor to travel this many microns you should get a 360 degree rotation. For example, a standard 100 turn per inch micrometer will advance 635 microns in one revolution. Thus, the following motion command executes repeated 360 rotations:
+
+while 1, OS_goto(635,1); pause(1), end
+
+Issue that command, replacing "635" with your value. You can break out of that with ctrl-c. You will likely get no motion since you have turned down the current-limiting potentiometer. Slowly increase the current with the potentiometer and watch the motor. Increase it up the point at which it moves smoothly and sounds fairly quiet. Usually when the motor is operating at its quietest, the current setting is near-optimal. Then add another 1/10th of a turn or so as a buffer (the amount of current needed will increase when the motor is running under load). If you do not see 360 degree rotations then check your gear ratio value, check that the micro-stepping wires are hooked up, and make sure that you're not driving too much or too little current to the motor. Do not proceed until you're getting smooth motions. If you're still having problems, check you're moving in half or quarter steps (OS_stepSize.m) and that the speed is reasonable (OS_moveSpeed). Note that your motor has a maximum RPM value. If you go above it or accelerate too fast to reach it, then it will stall or partially stall and you will lose steps. The result of this is that spindle will fail to rotate by 360 degrees and will repeatedly under-shoot. If you're having problems, issue OS_getInfo and check the max RPM you are asking your motor to reach. 
+
+You can check that the motor returns to the start value by observing the location of the piece of tape with respect to a nearby fixed object. This might sound inaccurate, but it's OK for now. In practice, any significant issues can be identified with this approach. 
+
+
+D. Trying different speeds and step sizes
+Now you want to check that the motor continues to perform well at faster speeds. Set your step size to full steps (OS_stepSize(1)). You can confirm this worked with OS_getInfo. Check the motions again. Try faster motion speeds with OS_moveSpeed: calling this with no arguments reports the current speed. Giving it a argument sets the speed. You can keep going up in speed until your motor stalls. OS_getInfo will tell you the max RPM you're asking of your motor. This should match roughly with the value on the spec sheet. If you're stalling or skipping well below that value (i.e. half or quarter of that value) then check your motor current (too high or too low is bad) and consider a more gentle acceleration regime. Try also going to half steps, as this often leads to smoother motions and less skipping. 
+
+
+E. Test back and forth motions. 
+Choose some reasonable settings at which you know the motor performs well. Reset the Arduino and start issuing absolute motion commands. e.g. OS_goto(6350,'a') causes the motor to advance 10 full rotations in one direction, then OS_goto(0,'a') sets it back to the starting point. You can issue much smaller motions, too, such as 10 microns. Try a bunch of different motions in various directions. When you finally issue OS_goto(0,'a'), it should always return back to the starting point. 
+
+
+
+
+
+
+** Necessary Hardware for a three-axis stage
+The easiest way to get up and running is to use an Arduino Mega 2560. This unit has enough IO pins to handle multiple axes, an LCD display, etc. An Arduino Due is not suitable since it is not currently compatible with the USB Host Shield we use to read the PS3 gamepad, which is our input device. The same goes for ChipKit boards. So unless you want to write your own game-pad driver (contact me if you do), you're stuck with the Mega. 
+
+You can use serial port only, but the PS3 dual shock is a great way of interacting with a three axis stage. This plugs into a USB Host Shield. I used the SparkFun version of the USB shield. If you don't stack the shield you will have access to more of the Mega's pins. To wire the devices in this way you will need to do the following:
+    a. Connect pin 7 to reset on the shield.
+    b. Connect reset on the shield to reset on the Mega.
+    c. Connect GND and VIN on the shield to GND and VIN on the Mega.
+    d. Connect pin 13 on the shield to pin 52 on the Mega.
+    e. Connect pin 12 on the shield to pin 50 on the Mega.
+    f. Connect pin 11 on the shield to pin 51 on the Mega.
+    g. Connect pin 10 on the shield to pin 53 on the Mega.
+    h. Connect pin 10 on the Mega to pin 53 on the Mega
+This wiring diagram is also shown in our paper. 
+
+
+The libraries to interface with the DualShock are found here: http://www.circuitsathome.com/arduino_usb_host_shield_projects (see link to the GitHub repository). You will note that there are drivers for XBox and Wii controllers also. However, our code assumes a DualShock. You can plug the controller directly into the USB shield with a mini USB cable or you can use Bluetooth if you can find a compatible dongle. 
+
+
+
+  - Per axis hardware: 
+      a. one Big Easy Driver (or similar, see Sparkfun). The motors have two pairs of 
+        leads called A and B. The letters A and B are also marked on the Easy Driver. 
+        Inverting the connections of the motor to the driver (i.e. connecting the A 
+        lead pair to B and vice versa) will invert the direction of rotation of the 
+        motor. Connect as required to get the stage moving in the correct direction 
+        according to button presses. The micro-controller software knows only stage
+        direction, not how it maps onto left and right. You determine that according
+        to how the motors are wired to the controllers. The micro-stepping pins on all
+        axes are wired together. 
+      b. one micrometer. We use regular Thor 50 TPI for X and Y and a Newport
+        HR-13 (100 TPI) for Z. Obviously a translation stage is needed too. 
+        Choose a stage from Newport or Thor according your needs. 
+      c. one flexible coupler. (https://sdp-si.com/eStore/Catalog/Group/484)
+        Choose operating torque over about 6 lb-in to minimise back-lash. 
+        We use 8" couplers for X and Y and a 10" coupler for Z. 
+      d. one stepper motor. We used Vexta motors sourced from orientalmotor.com
+        We use Vexta PK243M-02BA for XY and PK243M-01BA for Z. 
+      e. Machined male/female adapters to attach the flexible couplers to the micrometer 
+        head and stepper motor shaft (if shaft is not 1/4"). 
+
+  - Misc: You will also need a power supply for the motors (usually 24V). The Arduino
+  will need eternal a power supply (USB isn't enough) if you're using the USB host shield. 
+  You can either use a second PSU or a voltage regulator to drop the motor PSU down to 9V
+  or so. Finally, a Sparkfun RS232 Serial Shifter is needed if you want to interface the 
+  controller with a PC via the serial port (not virtual serial).
+
+
+
+
+* Usage instructions:
+  The DualShock controls the stage in the following ways:
+  1. Left hat-stick for X and Y. Right hat-stick up/down for Z. Right hat-stick left/right
+     does not do anything.
+  2. D-pad executes single motion steps in X and Y motions. D-pad plus Triangle performs 
+     fixed-step motions in Z.
+  3. Shoulder buttons (L1 and R1) cycle through four different speed modes. Selected speed
+     mode indicated by LEDs on the DualShock. 1 is slow and 4 is fast. See global variables
+     below for speed values these select. Speed modes influence hat-stick motions and D-pad
+     fixed speed motions. 
+  4. Pressing one of the four right-hand buttons stores the current stage location. Storage
+     is signalled by two beeps. Double-clicking the button will cause the stage to move to the
+     stored location. All four buttons default to the position of the stage on reboot. 

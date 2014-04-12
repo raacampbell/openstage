@@ -1,12 +1,12 @@
 
 /*
 
-  OpenStage microscope controller software for Arduino Mega 2560
+  OpenStage microscope stage controller for Arduino
 
   Copyright (C) 2013 Robert AA Campbell 
   Cold Spring Harbor Laboratory
   July 2013
-  rob@raacampbell.com
+  git@raacampbell.com
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

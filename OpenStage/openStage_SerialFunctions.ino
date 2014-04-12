@@ -8,7 +8,11 @@
 //ADD ERROR CHECKING IF TOO MANY OR TOO FEW VALUES ARE SENT
 int readSerialCSV(){
   int fieldIndex = 0;  // the current field being received
-  int sSign[numAxes]={1,1,1}; //sign 
+
+  int sSign[numAxes]; //movement sign
+  for (int ii=0; ii<numAxes; ii++){
+    sSign[ii]=1;
+  }
 
   char ch;
   while (ch != '$'){ //read until the terminator ($) is reached
@@ -33,8 +37,9 @@ int readSerialCSV(){
    }
    
    //set the signs
-   for (byte ii=0; ii<fieldIndex+1; ii++)
+   for (byte ii=0; ii<fieldIndex+1; ii++){
       values[ii]=values[ii]*sSign[ii];
+   }
      
    return fieldIndex;
 }
@@ -43,18 +48,27 @@ int readSerialCSV(){
 //Make a relative or absolute motion 
 void serialMove()
 {
-   //Determine if this will be an absolute or relative motion
-   while(SerialComms->available() == 0 );//block until char arrives
+  bool verbose=0;
+  if (verbose){
+    Serial.println("Entering serialMove()");
+  }
+  
+  //Determine if this will be an absolute or relative motion
+   while( (SerialComms->available()) == 0 );//block until char arrives
    char moveType=SerialComms->read();
-    
+
+   if (verbose){
+    Serial.print("Read next character:");
+    Serial.println(moveType);
+   }
+   
    //Define variables
    int doneReading=0; //1 when all axis fields have been read
-
-
+  
    float serialTarget[numAxes]; //Where we will be going to in microns
    
    int fieldIndex=readSerialCSV();
-
+   
    //Determine where to move [**IS THIS MIN STUFF RIGHT?**]
    for (byte ii=0; ii<min(numAxes, fieldIndex+1); ii++){
       if (moveType=='r')
@@ -63,7 +77,7 @@ void serialMove()
           serialTarget[ii]=values[ii]/1.0E3; //because least sig digits are after decimal point
           values[ii] = 0; // set the values to zero, ready for the next message
      }
-
+  
     moveToTarget(serialTarget);
     SerialComms->print('$'); //send a dollar, which is the terminator
  
@@ -75,9 +89,7 @@ void serialMove()
 // * serialSetMode
 // Set speed mode on the DualShock
 void serialSetMode(){
-  if (!doGamePad){
-    return;
-  }
+  #ifdef DO_GAMEPAD
 
   while(SerialComms->available() == 0 );//block until char arrives
 
@@ -93,6 +105,7 @@ void serialSetMode(){
      coarseFine=4;
      
    setPSLEDS();
+  #endif
 } //End serialSetMode()
 
 
@@ -105,7 +118,9 @@ void zeroStage(){
   for (byte ii=0; ii<numAxes; ii++){
     delta[ii]=stagePosition[ii];
     stagePosition[ii]=0;
+    #if doLCD
     lcdStagePos(ii,stagePosition[ii],0);
+    #endif
   }  
   
   for (byte ii=0; ii<4; ii++){

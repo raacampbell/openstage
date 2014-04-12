@@ -8,6 +8,7 @@
 
 
 
+#ifdef DO_LCD
 //------------------------------------------------------------------------------------------------
 // * lcdStagePos
 // Show position of selected axis on LCD display
@@ -58,7 +59,7 @@ void setupLCD(){
       lcd.print(" ");
      }
 } //End setupLCD()
-
+#endif
 
 //------------------------------------------------------------------------------------------------
 // * updateStagePos
@@ -101,7 +102,10 @@ void dButtonMove(int axis, int direction){
   //Update the stage position
   updateStagePos(axis,move,DPadStepSize);
   stepperPreviousPos[axis]=(*mySteppers[axis]).currentPosition();
+  
+  #ifdef DO_LCD
   lcdStagePos(axis,stagePosition[axis],-1);
+  #endif
 
   //Tidy up
   setStep(stepSize[coarseFine-1]);
@@ -111,8 +115,10 @@ void dButtonMove(int axis, int direction){
     digitalWrite(enable[axis],HIGH);
 
   digitalWrite(stageLEDs[axis],LOW);   
-  setupLCD();//run here just in case this gets corrupted from time to time
 
+  #ifdef DO_LCD
+  setupLCD();//run here just in case this gets corrupted from time to time
+  #endif
 
 } //End dButtonMove()
 
@@ -146,6 +152,18 @@ void beep(int freq, float duration){
       }
 } //End beep()
 
+
+
+//------------------------------------------------------------------------------------------------
+// * blink
+void blink(){
+  for (int ii=0; ii<3; ii++){
+    digitalWrite(13,HIGH);
+    delay(200);
+    digitalWrite(13,LOW);
+    delay(200);
+  }
+}
 
 
 
@@ -208,6 +226,7 @@ void setStep(float stepMode)
 // The coarseFine variable defines the speed mode of the controller. This function
 // updates the LEDs on the DualShock in order to reflect the currently chosen speed mode. 
 void setPSLEDS(){
+  #ifdef DO_GAMEPAD
   PS3.setAllOff();
   switch (coarseFine){
     case 1:
@@ -227,6 +246,7 @@ void setPSLEDS(){
          setStep(stepSize[3]);
          break;
        }
+   #endif
 }//End setPSLEDS()
 
 

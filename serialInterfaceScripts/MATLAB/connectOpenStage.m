@@ -24,11 +24,19 @@ function OS=connectOpenStage(DEV)
 %
 %
 % Rob Campbell - CHSL, August 2013
+%
+% -KNOWN ISSUES:
+% You will likely need to hard-code your serial port for the
+% automatic connection to work.
 
 
 
 if nargin==0
-    DEV='COM4'; %Might want to modify this to your default port
+    if ispc
+      DEV='COM4'; %Might want to modify this to your default port
+    else
+      DEV='/dev/tty.usbmodemfa131';
+    end
 end
 
 delete(instrfind({'Port'},{DEV}))
@@ -40,3 +48,8 @@ OS=serial(DEV,...
 
 
 fopen(OS);
+
+%Issue a beep to confirm we have connected to the stage. 
+fwrite(OS,'b')
+
+fprintf('Connection with OpenStage established at %s\n', DEV)

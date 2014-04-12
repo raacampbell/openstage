@@ -16,21 +16,22 @@ void moveToTarget(float target[]){
  
  
   
-  if (doGamePad){     
+  #ifdef DO_GAMEPAD
     PS3.setAllOff(); //Switch off the LEDs to indicate that we're making a non-manual motion
-  }
+  #endif
 
   float oneStep[numAxes]; //how far one step takes us
   long stepsToTake[numAxes]; //how many steps to take on each axis
 
 
   for (ii=0; ii<numAxes; ii++){
-    if (!axisPresent[ii])
+    if (!axisPresent[ii]){
       continue;
-  
- 
+    }
+
     intendedMove[ii]=target[ii]-stagePosition[ii]; //How far we need to move
-/*
+  
+  /*
     //compensate for backlash
     if (intendedMove[ii]<0 && digitalRead(stepDir[ii])==1)
        intendedMove[ii]=intendedMove[ii]-0.32; //the measured backlash in z
@@ -88,16 +89,16 @@ void moveToTarget(float target[]){
 
   //Return LEDs and Big Easy Drivers to previously selected step size
   //This also re-calculates the step size (which we re-defined above).
-  if (doGamePad){
-    setPSLEDS();
-  }
+  setPSLEDS();
   
   for (ii=0; ii<numAxes; ii++){
      if (!axisPresent[ii])
        continue;
-   
+       
+       #ifdef DO_LCD
        lcdStagePos(ii,stagePosition[ii],0);
-    
+       #endif
+
        stepperPreviousPos[ii]=(*mySteppers[ii]).currentPosition();
        (*mySteppers[ii]).setAcceleration(0);
        (*mySteppers[ii]).setSpeed(0);
@@ -113,27 +114,60 @@ void moveToTarget(float target[]){
 
 
 void runSteppersToPos(){
-
-  int n=0; //counter to monitor if the controller is locked in this loop
+  bool verbose=0;
+  //int n=0; //counter to monitor if the controller is locked in this loop
+  bool keepMoving=1;
+  bool axisFinished[numAxes];
   
-  while (stepperX.distanceToGo() != 0 ||
-         stepperY.distanceToGo() != 0 ||
-         stepperZ.distanceToGo() != 0){
-      stepperX.run();
-      stepperY.run(); 
-      stepperZ.run(); 
-      
-      
+  for (byte ii=0; ii<numAxes; ii++){
+    axisFinished[ii]=1;
+  }
+  
+  if (verbose){
+    Serial.println("Entering while loop in runSteppersToPos()");
+  }
+
+  while (keepMoving){
+
+    keepMoving=0;
+    for (byte ii=0; ii<numAxes; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      if ((*mySteppers[ii]).distanceToGo() != 0){
+         keepMoving=1;
+         axisFinished[ii]=0;         
+      } 
+    }
+    
+
+    //Motion is a touch faster if we place run code here
+    for (byte ii=0; ii<numAxes; ii++){
+      if (axisFinished[ii] || !axisPresent[ii]){
+        continue;
+      }
+      (*mySteppers[ii]).run();
+    }
+    
+     
+      //I haven't seen lock-ups in ages, so we comment out this code. 
       //Sometimes the controller locks up following analog stick motions
       //This is due to it getting stuck in this loop with the motors at zero
       //speed. Not yet clear why this happens, but in the mean time we can catch
       //it with the following code and deliver an audible indication that something
       //is wrong. This enables us to keep going and not lock up. 
-      if (stepperX.speed()==0 && 
-          stepperY.speed()==0 &&
-          stepperZ.speed()==0)
+       /*  long currentTotalSpeed=0;
+      for (int ii=0; ii<numAxes; ii++){
+        if (!axisPresent[ii]){
+           continue;
+        }
+        currentTotalSpeed+=(*mySteppers[ii]).speed();
+      }
+      
+      if (currentTotalSpeed==0){
             n++;
-            
+      }
+      
       if (n>50){ //If we're stuck here not moving for 50 cycles then something's wrong!
         for (int ii=0; ii<5; ii++){
             serialBeep();
@@ -141,6 +175,8 @@ void runSteppersToPos(){
           }
         break;
       }
+      */
    } //close while loop
 
 } //End runSteppersToPos
+
