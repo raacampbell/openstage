@@ -44,3 +44,8 @@ OS=serial(DEV,...
 
 
 fopen(OS);
+
+%Issue a beep to confirm we have connected to the stage. 
+OS_beep;
+
+fprintf('Connection with OpenStage established at %s\n', DEV)
