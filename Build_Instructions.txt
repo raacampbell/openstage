@@ -22,6 +22,8 @@ The minimum parts you will need to achieve this are:
 5. Masking tape, lab tape, or similar. 
 
 A. Installing the firmware on the Arduino 
+You will need to install the AccelStepper library (http://www.airspayce.com/mikem/arduino/AccelStepper/). If you already have the library, make sure it's the latest version. There was a bug prior to v1.37 that introduced errors in bidirectional motions. 
+
 The "OpenStage" directory contains the firmware. The firmware is divided up across multiple files. The file which begins "c_userSettings" and ends in ".ino" is the one which contains the user-specific settings which you will need to modify. More than one example file is included and these end in ".BAK" Choose the example that most closely resembles your use scenario. Rename it so it ends in ".ino" Read through the settings file and modify the settings as needed. There must be only one c_userSettings*.ino file in the directory. The .BAK files are ignored during the compile process and can be left in the same directory as the other files. You might want to set up the system so that serial port commands are delivered via the virtual serial port (Arduino programming port), as this initially easier. The Mega has hardware serial ports that can be used for delivering stage motion commands. The advantage of using these is that you can deliver de-bugging messages to the Arduino IDE's serial port viewer via the USB. Once you're satisfied with the settings, upload the firmware to the Arduino via the IDE.
 
 
