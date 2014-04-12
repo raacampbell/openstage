@@ -66,8 +66,8 @@ const byte numAxes=1; //Set this to the number of axes on you system
 // on each axis. You can choose which of these axes to enable by commenting or uncommenting the
 // definitions below. 
 #define AXIS_1
-#define AXIS_2
-#define AXIS_3
+//#define AXIS_2
+//#define AXIS_3
 //#define AXIS_4
 
 
