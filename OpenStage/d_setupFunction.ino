@@ -1,29 +1,30 @@
 
 void setup() {
+  bool verbose=0;
 
- 
   pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
   pinMode(beepPin,OUTPUT); //Produce sound on this pin
 
-  // Set up the requred AccelStepper instances (one per axis)
-  if (axisPresent[0]){
-    AccelStepper stepperX(1, stepOut[0], stepDir[0]); 
-    mySteppers[0] = &stepperX;
-  }
-  if (axisPresent[1]){
-    AccelStepper stepperY(1, stepOut[1], stepDir[1]); 
-    mySteppers[1] = &stepperY;
-  }
-  if (axisPresent[2]){
-    AccelStepper stepperZ(1, stepOut[2], stepDir[2]); 
-    mySteppers[2] = &stepperZ;
-  }
-  if (axisPresent[3]){
-    AccelStepper stepperA(1, stepOut[3], stepDir[3]); 
-    mySteppers[3] = &stepperA;
-  }
+
+  #ifdef AXIS_1
+   mySteppers[0] = &stepper1;
+   axisPresent[0]=1; 
+  #endif
+  #ifdef AXIS_2
+   mySteppers[1] = &stepper2;
+   axisPresent[1]=1;
+  #endif
+  #ifdef AXIS_3
+   mySteppers[2] = &stepper3;
+   axisPresent[2]=1;
+  #endif
+  #ifdef AXIS_4
+   mySteppers[3] = &stepper4;
+   axisPresent[3]=1;
+  #endif
 
 
+  
   // Connect to the PC's serial port via the Arduino programming USB connection. 
   // This used mainly for printing de-bugging information to the PC's serial terminal
   // during testing. [In future we will add the option for controlling the stage through
@@ -73,7 +74,7 @@ void setup() {
   #endif
 
   // Connect to the USB Shield
-  #ifdef DO_GAMEPDAD
+  #ifdef DO_GAMEPAD
     if (Usb.Init() == -1) {
       Serial.print(F("\r\nConnection to USB shield failed"));
     
@@ -122,7 +123,7 @@ void setup() {
   } //ii for loop
 
 
-  #ifdef DO_GAMEPDAD
+  #ifdef DO_GAMEPAD
     // Poll the USB interface a few times. Failing to do this causes the motors to move during 
     // following a rest. I don't know why the following code fixes this, but it does. 
     for (byte ii=1; ii<10; ii++){
@@ -146,7 +147,7 @@ void setup() {
   //An analog stick value of zero likely means that the controller is not connected. 
   //If the game pad is enabled, don't proceed until a contoller is found, or the 
   //stage will move by itself.
-  #ifdef DO_GAMEPDAD
+  #ifdef DO_GAMEPAD
     while (PS3.getAnalogHat(LeftHatX)==0){
       #ifdef DO_LCD
         lcd.setCursor(0,1);

@@ -1,15 +1,14 @@
-
 // Some global definitions that need to be modified by the user for the stage to work
-// This file is set up for a single-stage solution with an Arduino Uno in mind. No LCD
-// and no game pad. 
+
+// This file is set up for three axes, an LCD display, and a game pad. This requires a 
+// Mega as a lot of pins are used. 
 
 
 //------------------------------------------------------------------------------------------------
 // * Enable/disable major OpenStage functions 
 //
-//#define DO_LCD      //Uncomment this line to enable enable LCD character display
-//#define DO_GAMEPDAD //Uncomment this line to enable PS3 DualShock as an input device
-
+#define DO_LCD      //Uncomment this line to enable enable LCD character display
+#define DO_GAMEPAD //Uncomment this line to enable PS3 DualShock as an input device
 
 
 
@@ -23,17 +22,25 @@
 // 3) Disable serial comms for stage control. 
 //
 // These three possibilities are controlled by altering the following two variables:
-#define DO_SERIAL_INTERFACE
-bool controlViaUSB=1;     //Set to 1 to control via USB. See setup() for serial port IDs.
+#define DO_SERIAL_INTERFACE //Uncomment to enable serial interface
+bool controlViaUSB=0;       //Set to 1 to control via USB.
 
 //If using PC serial port, this is the ID of the MEGA's hardware serial line (e.g. Serial3)
 //If using an Uno, or another mic with no hardware serial, then this should be set to "Serial"
-#define HARDWARE_SERIAL_PORT Serial 
+#define HARDWARE_SERIAL_PORT Serial1 
 HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
+//The following is not a user setting 
 #ifdef DO_SERIAL_INTERFACE
- bool doSerialInterface=1; //Set to 1 to communicate with the stage via a PC serial port. 
+ bool doSerialInterface=1; //Do not alter this value 
 #endif
+
+#ifndef DO_SERIAL_INTERFACE
+ bool doSerialInterface=0; //Do not alter this value 
+#endif
+
+
+
 
 
 //------------------------------------------------------------------------------------------------
@@ -48,17 +55,21 @@ HardwareSerial* SerialComms;  //pointer to stage comms serial object
 // The properties of each axis are defined as separate variables (mostly arrays with a length 
 // equal to the number of axes). You can have up 4 axes. 
 
-const byte numAxes=1; //Set this to the number of axes on you system 
+const byte numAxes=3; //Set this to the number of axes on you system (values 1 to 4 are possible)
 
-// axisPresent
-// Allows particular axes to be skipped. Useful for testing. 1 means present. 0 means absent. 
-// e.g. if you have one axis the following vector might be {1,0,0,0} Although {0,1,0,0} should 
-// also work
-bool axisPresent[maxAxes]={1,0,0,0}; 
+
+// There are up to four steppers that can be added. The step size, gear ratio, etc can 
+// be different on different axes. The arrays that follow specify the properties of the steppers
+// on each axis. You can choose which of these axes to enable by commenting or uncommenting the
+// definitions below. 
+#define AXIS_1
+#define AXIS_2
+#define AXIS_3
+//#define AXIS_4
 
 
 // gearRatio
-// Micrometer gear ratios on X,Y,Z in microns per revolution. 
+// Micrometer gear ratios on X,Y,Z in microns per revolution.
 // NOTE: in this case and all others, unused axes can have any value. Values of unused axes
 // are simply not read.  
 unsigned short gearRatio[maxAxes]={635,635,250,635}; 
@@ -88,31 +99,23 @@ bool disableWhenStationary[maxAxes]={0,0,0,0};
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[maxAxes]={11,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
+byte stepOut[maxAxes]={22,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[maxAxes]={12,25,27,0}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={23,25,27,0}; //Ordered X, Y, and Z
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[maxAxes]={3,29,30,0}; //Ordered X, Y, and Z
+byte enable[maxAxes]={28,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=4;
-byte MS2=5;
-byte MS3=6;
+byte MS1=45;
+byte MS2=47;
+byte MS3=49;
 
-
-
-
-
-//------------------------------------------------------------------------------------------------
-// * AccelStepper 
-//Make an array of pointers to the AccelStepper instances to make loops possible
-AccelStepper *mySteppers[numAxes];
 
 
 
@@ -123,7 +126,7 @@ AccelStepper *mySteppers[numAxes];
 // * Outputs
 // The following are pin definitions of controller outputs. These signal information to the user
 
-byte beepPin=13; //Set this to the pin to which the Piezo buzzer is connected 
+byte beepPin=9; //Set this to the pin to which the Piezo buzzer is connected 
 
 // stageLEDs
 // LEDs will light when the stage moves or an axis is reset, 
@@ -139,14 +142,14 @@ byte beepPin=13; //Set this to the pin to which the Piezo buzzer is connected
 // PC1: 36 (Y axis)
 // PC2: 35 (Z axis)
 // PC3: 34 (a good idea to reserve this for a 4th axis, such as a PIFOC)
-byte stageLEDs[maxAxes]={13,36,35,35};
-
+byte stageLEDs[4]={37,36,35,35};
 
 
 // Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
-#if doLCD
-   LiquidCrystal lcd(7, 6, 5, 4, 3, 2 );
+#ifdef DO_LCD
+   LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 #endif
+
 
 
 
@@ -190,6 +193,7 @@ float DPadStepSize=1/2.0;
 // Acceleration in X, Y, and Z
 unsigned long DPadAccel[maxAxes]={1.0E4, 1.0E4, 1.0E4, 1.0E4};
 
+
 // * moveTo speeds
 //
 // The moveToTarget() function is executed when the user travels to a right-button set point
@@ -214,3 +218,34 @@ short hatStickThresh=40; //Ensure we don't get motion for stick values smaller t
 // 0 is linear. See the fscale function for details. 
 float curve[4]={-7,-6,-5,-4};
 
+
+//Create wired connection to PS3 gamepad on USB host shield. If you were to attempt a wireless (bluetooth)
+//connection you'd want to edit the following code.  
+//#include <PS3USB.h>
+#ifdef DO_GAMEPAD
+ USB Usb;
+ PS3USB PS3(&Usb); 
+#endif
+
+
+
+// * AccelStepper  
+// Set up AccelStepper instances 
+bool axisPresent[maxAxes]={0,0,0,0}; //don't edit
+AccelStepper *mySteppers[numAxes];
+
+#ifdef AXIS_1
+ AccelStepper stepper1(1, stepOut[0], stepDir[0]); 
+#endif
+
+#ifdef AXIS_2
+ AccelStepper stepper2(1, stepOut[1], stepDir[1]); 
+#endif
+
+#ifdef AXIS_3
+ AccelStepper stepper3(1, stepOut[2], stepDir[2]); 
+#endif
+
+#ifdef AXIS_4
+ AccelStepper stepper4(1, stepOut[3], stepDir[3]); 
+#endif
