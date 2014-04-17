@@ -102,22 +102,22 @@ bool disableWhenStationary[maxAxes]={0,0,0,0};
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[maxAxes]={43,24,43,0}; //Set these to the step out pins (ordered X, Y, and Z)
+byte stepOut[maxAxes]={22,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[maxAxes]={45,25,45,0}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={23,25,27,0}; //Ordered X, Y, and Z
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[maxAxes]={31,29,31,0}; //Ordered X, Y, and Z
+byte enable[maxAxes]={28,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=33;
-byte MS2=35;
-byte MS3=41;
+byte MS1=45;
+byte MS2=47;
+byte MS3=49;
 
 
 
@@ -127,7 +127,7 @@ byte MS3=41;
 // * Outputs
 // The following are pin definitions of controller outputs. These signal information to the user
 
-byte beepPin=22; //Set this to the pin to which the Piezo buzzer is connected 
+byte beepPin=9; //Set this to the pin to which the Piezo buzzer is connected 
 
 // stageLEDs
 // LEDs will light when the stage moves or an axis is reset, 
@@ -143,7 +143,7 @@ byte beepPin=22; //Set this to the pin to which the Piezo buzzer is connected
 // PC1: 36 (Y axis)
 // PC2: 35 (Z axis)
 // PC3: 34 (a good idea to reserve this for a 4th axis, such as a PIFOC)
-byte stageLEDs[maxAxes]={28,36,35,35};
+byte stageLEDs[4]={37,36,35,35};
 
 
 
