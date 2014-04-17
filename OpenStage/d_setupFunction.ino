@@ -2,6 +2,25 @@
 void setup() {
   bool verbose=0;
 
+
+  // Connect to the PC's serial port via the Arduino programming USB connection. 
+  // This used mainly for printing de-bugging information to the PC's serial terminal
+  // during testing. [In future we will add the option for controlling the stage through
+  // the USB port]
+  Serial.begin(115200); //This is a bit horrible
+  if (doSerialInterface){
+    if (!controlViaUSB){
+       HARDWARE_SERIAL_PORT.begin(115200);
+       SerialComms = &HARDWARE_SERIAL_PORT;
+     } else {
+       SerialComms = &HARDWARE_SERIAL_PORT;
+     }
+  } //if doSerialInterface
+  if (verbose){
+     Serial.println(" ");
+     Serial.println("Established serial connection");
+  }
+
   pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
   pinMode(beepPin,OUTPUT); //Produce sound on this pin
 
@@ -25,19 +44,7 @@ void setup() {
 
 
   
-  // Connect to the PC's serial port via the Arduino programming USB connection. 
-  // This used mainly for printing de-bugging information to the PC's serial terminal
-  // during testing. [In future we will add the option for controlling the stage through
-  // the USB port]
-  Serial.begin(115200); //This is a bit horrible
-  if (doSerialInterface){
-    if (!controlViaUSB){
-       HARDWARE_SERIAL_PORT.begin(115200);
-       SerialComms = &HARDWARE_SERIAL_PORT;
-     } else {
-       SerialComms = &HARDWARE_SERIAL_PORT;
-     }
-  } //if doSerialInterface
+
 
 
   //Set the micro-step pins as outputs
@@ -46,6 +53,9 @@ void setup() {
   pinMode(MS3,OUTPUT);  
 
 
+  if (verbose){
+    Serial.print("Setting up pins for axes: ");
+  }
   //Set up motor control pins, LED pins, etc, as output lines
   for (byte ii=0; ii<numAxes; ii++){
     if (!axisPresent[ii]) //Skip axes that aren't present 
@@ -58,13 +68,17 @@ void setup() {
 
     pinMode(enable[ii],OUTPUT);
     digitalWrite(enable[ii],LOW);//power to motors
-  } 
 
-  for (byte ii=0; ii<4; ii++){
     pinMode(stageLEDs[ii],OUTPUT);
     digitalWrite(stageLEDs[ii],LOW);
+    if (verbose){
+      Serial.print(ii);
+      Serial.print(" ");
+   }
+  } 
+  if (verbose){
+    Serial.println(" ");
   }
-
 
   //Initialise the 20 by 4 LCD display 
   #ifdef DO_LCD
@@ -73,10 +87,17 @@ void setup() {
    lcd.clear();
   #endif
 
+
+
   // Connect to the USB Shield
   #ifdef DO_GAMEPAD
+    if (verbose){
+      Serial.print("USB shield connecting...");
+     }
     if (Usb.Init() == -1) {
-      Serial.print(F("\r\nConnection to USB shield failed"));
+      if (verbose){
+        Serial.print(F("\r\nConnection to USB shield failed"));
+      }
     
       //halt and flash warning
       #ifdef DO_LCD
@@ -91,17 +112,12 @@ void setup() {
     }
 
 
-     //Pre-calculate the speeds for different hat-stick values. This moves these
-     //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
-     for (byte ii=0; ii<128; ii++){
-       for (byte jj=0; jj<4; jj++){         
-          //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
-          SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
-       }  
-     }
+//    calcSpeedMat();//pre-calculate hat-stick to speed conversion
+    if (verbose){
+      Serial.print("Connected!");
+    }
 
   #endif
-  
 
   //Display boot message on LCD screen  
   #ifdef DO_LCD
@@ -124,16 +140,25 @@ void setup() {
 
 
   #ifdef DO_GAMEPAD
+    if (verbose){
+        Serial.print("Polling USB");
+     }
     // Poll the USB interface a few times. Failing to do this causes the motors to move during 
-    // following a rest. I don't know why the following code fixes this, but it does. 
+    // following a reset.
     for (byte ii=1; ii<10; ii++){
       Usb.Task(); 
       delay(100); 
+      if (verbose){
+     //   Serial.print(".");
+      }
       #ifdef DO_LCD
        lcd.print(".");
       #endif
      } //for loop
     setPSLEDS(); //Set the LEDs on the DualShock to the correct states
+    if (verbose){
+        Serial.println(" ");
+    }
   #endif
 
 
