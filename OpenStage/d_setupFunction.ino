@@ -110,11 +110,13 @@ void setup() {
       }// while
       #endif  
     }
-
-
-//    calcSpeedMat();//pre-calculate hat-stick to speed conversion
-    if (verbose){
-      Serial.print("Connected!");
+   //Pre-calculate the speeds for different hat-stick values. This moves these
+   //calculations out of the main loop, and allows for smoother closed-loop hat-stick motions.
+   for (byte ii=0; ii<128; ii++){
+    for (byte jj=0; jj<4; jj++){         
+       //SPEEDMAT[ii][jj]=(ii/127.5)*maxSpeed[jj]; //Plain linear
+       SPEEDMAT[ii][jj]=fscale(hatStickThresh, 127.5, 0.04, maxSpeed[jj], ii, curve[jj]); //non-linear mapping
+     }
     }
 
   #endif
