@@ -71,6 +71,7 @@ void setup() {
 
     pinMode(stageLEDs[ii],OUTPUT);
     digitalWrite(stageLEDs[ii],LOW);
+
     if (verbose){
       Serial.print(ii);
       Serial.print(" ");
@@ -151,7 +152,7 @@ void setup() {
       Usb.Task(); 
       delay(100); 
       if (verbose){
-     //   Serial.print(".");
+        Serial.print(".");
       }
       #ifdef DO_LCD
        lcd.print(".");
