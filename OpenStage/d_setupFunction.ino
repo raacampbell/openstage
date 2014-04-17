@@ -92,7 +92,7 @@ void setup() {
   // Connect to the USB Shield
   #ifdef DO_GAMEPAD
     if (verbose){
-      Serial.print("USB shield connecting...");
+      Serial.println("USB shield connecting...");
      }
     if (Usb.Init() == -1) {
       if (verbose){
@@ -157,7 +157,7 @@ void setup() {
      } //for loop
     setPSLEDS(); //Set the LEDs on the DualShock to the correct states
     if (verbose){
-        Serial.println(" ");
+        Serial.println("Done polling");
     }
   #endif
 
@@ -180,6 +180,9 @@ void setup() {
         lcd.setCursor(0,2);
         lcd.print("And Re-Boot");
       #endif
+      if (verbose){
+        Serial.println("Connect PS3 Controller!");
+      }
     } //while PS3
   #endif
   
@@ -188,6 +191,11 @@ void setup() {
     lcd.home();
     setupLCD();//Print axis names to LCD
   #endif
+
+
+  if (verbose){
+    Serial.println("Finished setup()");
+  }
 
 
 }//End of setup function 
