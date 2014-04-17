@@ -13,7 +13,7 @@
 // * Enable/disable major OpenStage functions 
 //
 //#define DO_LCD      //Uncomment this line to enable enable LCD character display
-//#define DO_GAMEPDAD //Uncomment this line to enable PS3 DualShock as an input device
+#define DO_GAMEPAD //Uncomment this line to enable PS3 DualShock as an input device
 
 
 
@@ -33,7 +33,7 @@ bool controlViaUSB=1;       //Set to 1 to control via USB.
 
 //If using PC serial port, this is the ID of the MEGA's hardware serial line (e.g. Serial3)
 //If using an Uno, or another mic with no hardware serial, then this should be set to "Serial"
-#define HARDWARE_SERIAL_PORT Serial 
+#define HARDWARE_SERIAL_PORT Serial
 HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
 //The following is not a user setting 
@@ -75,7 +75,7 @@ const byte numAxes=1; //Set this to the number of axes on you system
 // Micrometer gear ratios on X,Y,Z in microns per revolution. 
 // NOTE: in this case and all others, unused axes can have any value. Values of unused axes
 // are simply not read.  
-unsigned short gearRatio[maxAxes]={635,635,250,635}; 
+unsigned short gearRatio[maxAxes]={500,635,500,635}; 
 
 
 // fullStep
@@ -102,22 +102,22 @@ bool disableWhenStationary[maxAxes]={0,0,0,0};
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[maxAxes]={11,24,26,0}; //Set these to the step out pins (ordered X, Y, and Z)
+byte stepOut[maxAxes]={43,24,43,0}; //Set these to the step out pins (ordered X, Y, and Z)
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[maxAxes]={12,25,27,0}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={45,25,45,0}; //Ordered X, Y, and Z
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[maxAxes]={3,29,30,0}; //Ordered X, Y, and Z
+byte enable[maxAxes]={31,29,31,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=4;
-byte MS2=5;
-byte MS3=6;
+byte MS1=33;
+byte MS2=35;
+byte MS3=41;
 
 
 
@@ -127,7 +127,7 @@ byte MS3=6;
 // * Outputs
 // The following are pin definitions of controller outputs. These signal information to the user
 
-byte beepPin=13; //Set this to the pin to which the Piezo buzzer is connected 
+byte beepPin=22; //Set this to the pin to which the Piezo buzzer is connected 
 
 // stageLEDs
 // LEDs will light when the stage moves or an axis is reset, 
@@ -143,7 +143,7 @@ byte beepPin=13; //Set this to the pin to which the Piezo buzzer is connected
 // PC1: 36 (Y axis)
 // PC2: 35 (Z axis)
 // PC3: 34 (a good idea to reserve this for a 4th axis, such as a PIFOC)
-byte stageLEDs[maxAxes]={13,36,35,35};
+byte stageLEDs[maxAxes]={28,36,35,35};
 
 
 
