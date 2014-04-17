@@ -21,7 +21,7 @@ void setup() {
      Serial.println("Established serial connection");
   }
 
-  pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
+  //pinMode(13,OUTPUT); //PIN 13 is optionally used for testing and debugging with an osciliscope
   pinMode(beepPin,OUTPUT); //Produce sound on this pin
 
 
