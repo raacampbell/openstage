@@ -24,7 +24,7 @@ float buttonStageLocations[4][maxAxes] = {{0,0,0,0},
 bool locationStored[4]={0,0,0,0};
 
 
-// SPEENMAT stores the motor speed for each hat-stick value at each speed mode. These numbers
+// SPEEDMAT stores the motor speed for each hat-stick value at each speed mode. These numbers
 // are calculated once in the setup function and never change during execution. Pre-calculating 
 // them is a good way of improving performance during hat-stick motions. 
 float SPEEDMAT[128][4];
