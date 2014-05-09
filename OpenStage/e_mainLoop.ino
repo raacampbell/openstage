@@ -56,9 +56,10 @@ void loop() {
 
   //Move based on serial commands 
   #ifdef DO_SERIAL_INTERFACE
-
     if (SerialComms->available()){
         char ch=SerialComms->read(); //read first character
+        if (ch=='H') //Handshake
+          SerialComms->write(1);
         if (ch=='g') //Absolute and relative motion
           serialMove(); 
         if (ch=='m') //Set speed mode on DualShock

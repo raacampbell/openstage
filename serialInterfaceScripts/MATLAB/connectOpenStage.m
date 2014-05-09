@@ -35,21 +35,28 @@ if nargin==0
     if ispc
       DEV='COM4'; %Might want to modify this to your default port
     else
-      DEV='/dev/tty.usbmodemfa131';
+      DEV='/dev/tty.usbmodemfd121';
     end
 end
 
 delete(instrfind({'Port'},{DEV}))
 
 OS=serial(DEV,...
-    'TimeOut',2,...
+    'TimeOut',0.5,...
     'BaudRate',115200,...
     'Terminator','$');
 
 
 fopen(OS);
 
-%Issue a beep to confirm we have connected to the stage. 
-fwrite(OS,'b')
+Connected = [];
+fprintf('Connecting')
+warning off
 
-fprintf('Connection with OpenStage established at %s\n', DEV)
+while isempty(Connected)
+	fwrite(OS, 'H');
+	fprintf('.')
+	Connected = fread(OS, 1);
+end
+warning on
+fprintf('\nConnection with OpenStage established at %s\n', DEV)
