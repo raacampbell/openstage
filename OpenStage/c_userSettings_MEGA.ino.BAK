@@ -27,7 +27,7 @@ bool controlViaUSB=0;       //Set to 1 to control via USB.
 
 //If using PC serial port, this is the ID of the MEGA's hardware serial line (e.g. Serial3)
 //If using an Uno, or another mic with no hardware serial, then this should be set to "Serial"
-#define HARDWARE_SERIAL_PORT Serial1 
+#define HARDWARE_SERIAL_PORT Serial1
 HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
 //The following is not a user setting 

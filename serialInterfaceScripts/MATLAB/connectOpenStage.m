@@ -38,20 +38,21 @@ if nargin==0
       DEV='/dev/tty.usbmodemfd121';
     end
 end
+warning off
 
 delete(instrfind({'Port'},{DEV}))
 
 OS=serial(DEV,...
-    'TimeOut',0.5,...
+    'TimeOut',1.5,...
     'BaudRate',115200,...
     'Terminator','$');
 
 
 fopen(OS);
 
+%Attempt to connect and stay in loop until connection is established
 Connected = [];
 fprintf('Connecting')
-warning off
 
 while isempty(Connected)
 	fwrite(OS, 'H');

@@ -148,7 +148,7 @@ byte stageLEDs[4]={37,36,35,35};
 
 
 // Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
-#if doLCD
+#ifdef DO_LCD
    LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 #endif
 

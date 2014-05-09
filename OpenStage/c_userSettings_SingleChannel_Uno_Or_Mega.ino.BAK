@@ -38,7 +38,7 @@ HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
 //The following is not a user setting 
 #ifdef DO_SERIAL_INTERFACE
- bool doSerialInterface=1; //Do not alter this value 
+ bool LSerialInterface=1; //Do not alter this value 
 #endif
 
 #ifndef DO_SERIAL_INTERFACE
@@ -148,7 +148,7 @@ byte stageLEDs[maxAxes]={13,36,35,35};
 
 
 // Define pins for LCD display (http://learn.adafruit.com/character-lcds/wiring-a-character-lcd)
-#if doLCD
+#ifdef DO_LCD
    LiquidCrystal lcd(7, 6, 5, 4, 3, 2);
 #endif
 
