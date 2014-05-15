@@ -171,48 +171,72 @@ void blink(){
 //------------------------------------------------------------------------------------------------
 // setStep
 // This function takes as its input a float defining the fractional step size. It 
-// sets the microstep pins appropriately for the Big Easy Drivers to implement the 
+// sets the microstep pins appropriately for the stepper drivers to implement the 
 // desired microstep size. 
+// We assume for now that the user 
 void setStep(float stepMode)
 {
 
-  //Set the microstep pins on the Big Easy Driver
-  //Seperate if statements, otherwise loop overhead will
-  //vary with stepMode NOTE: if hardware timing works we can use switches
+  // Seperate if statements, otherwise loop overhead will vary with stepMode 
+  // NOTE: if hardware timing works we can use switches
   if (stepMode==1.0/1.0)
   {
-    digitalWrite(MS1,LOW);
-    digitalWrite(MS2,LOW);
-    digitalWrite(MS3,LOW);
+    for (byte ii=0; ii<4; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      digitalWrite(MS[ii][1],LOW);
+      digitalWrite(MS[ii][2],LOW);
+      digitalWrite(MS[ii][3],LOW);
+    }
   } 
   
   if (stepMode==(1.0/2.0))
   {
-    digitalWrite(MS1,HIGH);
-    digitalWrite(MS2,LOW);
-    digitalWrite(MS3,LOW);
+    for (byte ii=0; ii<4; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      digitalWrite(MS[ii][1],HIGH);
+      digitalWrite(MS[ii][2],LOW);
+      digitalWrite(MS[ii][3],LOW);
+    }
   }  
-
   
   if (stepMode==(1.0/4.0))
   {
-   digitalWrite(MS1,LOW);
-   digitalWrite(MS2,HIGH);
-   digitalWrite(MS3,LOW);
+    for (byte ii=0; ii<4; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      digitalWrite(MS[ii][1],LOW);
+      digitalWrite(MS[ii][2],HIGH);
+      digitalWrite(MS[ii][3],LOW);
+    }
   }
   
   if (stepMode==(1.0/8.0))
   {
-    digitalWrite(MS1,HIGH);
-    digitalWrite(MS2,HIGH);
-    digitalWrite(MS3,LOW);
+    for (byte ii=0; ii<4; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      digitalWrite(MS[ii][1],HIGH);
+      digitalWrite(MS[ii][2],HIGH);
+      digitalWrite(MS[ii][3],LOW);
+    }
   }  
   
   if (stepMode==(1.0/16.0))
   {
-   digitalWrite(MS1,HIGH);
-   digitalWrite(MS2,HIGH);
-   digitalWrite(MS3,HIGH);
+    for (byte ii=0; ii<4; ii++){
+      if (!axisPresent[ii]){
+        continue;
+      }
+      digitalWrite(MS[ii][1],HIGH);
+      digitalWrite(MS[ii][2],HIGH);
+      digitalWrite(MS[ii][3],HIGH);
+    }
   }
 
 } //End setStep()

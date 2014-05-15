@@ -234,12 +234,19 @@ byte enable[maxAxes]={39,36,7,23}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
+
+//following are ch1 [FOLLOWING THREE DEFS WILL GO, IN FACT, WE SHOULD RE-DO ALL THE CODE THIS WAY]
 byte MS1=42;
 byte MS2=43;
 byte MS3=40;
 
-
-
+//Let's define an array with the microstepping pins
+byte MS[4][3]={ 
+	{42,43,40},  //channel 1, MS pins 1,2,3
+	{33,32,36},  //channel 2, MS pins 1,2,3
+	{49,48,10},  //channel 3, MS pins 1,2,3
+	{26,27,24}   //channel 4, MS pins 1,2,3
+	};
 
 // Do not edit the following lines
 // * AccelStepper  
