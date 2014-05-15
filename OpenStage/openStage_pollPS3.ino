@@ -70,9 +70,14 @@ int pollPS3(){
           digitalWrite(enable[ii],HIGH);    
       } 
 
-     //Write to stageLEDs on Port C
-     PORTC &= 240; //zero first 4 pins but leave the rest the same
-     PORTC |= stageLEDpins;
+     //Write to stageLEDs on Port C (if you're not using a PCB) or F (if you are using a PCB)
+     #ifdef PCB
+       PORTF &= 240; //zero first 4 pins but leave the rest the same
+       PORTF |= stageLEDpins;
+     #else
+       PORTC &= 240; //zero first 4 pins but leave the rest the same
+       PORTC |= stageLEDpins;
+     #endif
 
   }//End for (byte ii=0; ii<numAxes; ii++), the motion interval setting loop
 
