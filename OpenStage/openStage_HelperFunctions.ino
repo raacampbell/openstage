@@ -185,9 +185,9 @@ void setStep(float stepMode)
       if (!axisPresent[ii]){
         continue;
       }
+      digitalWrite(MS[ii][0],LOW);
       digitalWrite(MS[ii][1],LOW);
       digitalWrite(MS[ii][2],LOW);
-      digitalWrite(MS[ii][3],LOW);
     }
   } 
   
@@ -197,9 +197,9 @@ void setStep(float stepMode)
       if (!axisPresent[ii]){
         continue;
       }
-      digitalWrite(MS[ii][1],HIGH);
+      digitalWrite(MS[ii][0],HIGH);
+      digitalWrite(MS[ii][1],LOW);
       digitalWrite(MS[ii][2],LOW);
-      digitalWrite(MS[ii][3],LOW);
     }
   }  
   
@@ -209,9 +209,9 @@ void setStep(float stepMode)
       if (!axisPresent[ii]){
         continue;
       }
-      digitalWrite(MS[ii][1],LOW);
-      digitalWrite(MS[ii][2],HIGH);
-      digitalWrite(MS[ii][3],LOW);
+      digitalWrite(MS[ii][0],LOW);
+      digitalWrite(MS[ii][1],HIGH);
+      digitalWrite(MS[ii][2],LOW);
     }
   }
   
@@ -221,9 +221,9 @@ void setStep(float stepMode)
       if (!axisPresent[ii]){
         continue;
       }
+      digitalWrite(MS[ii][0],HIGH);
       digitalWrite(MS[ii][1],HIGH);
-      digitalWrite(MS[ii][2],HIGH);
-      digitalWrite(MS[ii][3],LOW);
+      digitalWrite(MS[ii][2],LOW);
     }
   }  
   
@@ -233,9 +233,9 @@ void setStep(float stepMode)
       if (!axisPresent[ii]){
         continue;
       }
+      digitalWrite(MS[ii][0],HIGH);
       digitalWrite(MS[ii][1],HIGH);
       digitalWrite(MS[ii][2],HIGH);
-      digitalWrite(MS[ii][3],HIGH);
     }
   }
 
