@@ -46,14 +46,6 @@ void setup() {
   #endif
 
 
-  
-
-
-
-  //Set the micro-step pins as outputs
-  pinMode(MS1,OUTPUT);
-  pinMode(MS2,OUTPUT);
-  pinMode(MS3,OUTPUT);  
 
 
   if (verbose){
@@ -74,6 +66,12 @@ void setup() {
 
     pinMode(stageLEDs[ii],OUTPUT);
     digitalWrite(stageLEDs[ii],LOW);
+
+    //Set microstep pins
+    for (byte jj=0; jj<3; jj++){
+        pinMode(MS[ii][jj],OUTPUT);
+    }
+
 
     if (verbose){
       Serial.print(ii);
