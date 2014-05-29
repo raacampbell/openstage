@@ -8,8 +8,8 @@
 // * Enable/disable major OpenStage functions 
 //
 #define DO_LCD      //Uncomment this line to enable enable LCD character display
-#define DO_GAMEPAD //Uncomment this line to enable PS3 DualShock as an input device
-#define PCB //This is uncommented if the user has an OpenStage PCB
+#define DO_GAMEPAD  //Uncomment this line to enable PS3 DualShock as an input device
+#define PCB         //This is uncommented if the user has an OpenStage PCB
 
 
 //------------------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ bool controlViaUSB=0;       //Set to 1 to control via USB.
 
 //If using PC serial port, this is the ID of the MEGA's hardware serial line (e.g. Serial3)
 //If using an Uno, or another mic with no hardware serial, then this should be set to "Serial"
-#define HARDWARE_SERIAL_PORT Serial1
+#define HARDWARE_SERIAL_PORT Serial3
 HardwareSerial* SerialComms;  //pointer to stage comms serial object
 
 //The following is not a user setting 
@@ -195,17 +195,7 @@ byte beepPin=A15; //Set this to the pin to which the Piezo buzzer is connected
 // LEDs will light when the stage moves or an axis is reset, 
 // *NOTE: Updating the stage LEDs for hat-stick motions requires fast digital writes as motor speed
 //        is set in a closed-loop based on hat-stick position. So we set the stage LEDs using 
-//        direct port writes. The code expects the LEDS to be on the first 3 pins of port C of the
-//        Mega. You can use a different port (or even different pins on that port), but then you will
-//        have to change the code in pollPS3. Direct port writes on these pins are only implemented 
-//        for the closed-loop hat-stick control code. Elsewhere we use conventional Arduino 
-//        digitalWrites, as these are adequate. 
-//
-// PC0: 37 (X axis)
-// PC1: 36 (Y axis)
-// PC2: 35 (Z axis)
-// PC3: 34 (a good idea to reserve this for a 4th axis, such as a PIFOC)
-//byte stageLEDs[4]={A3,A2,A1,A0};
+//        direct port writes. The code expects the LEDS to be on the first 3 pins of the port. 
 byte stageLEDs[4]={A0,A1,A2,A3};
 
 
@@ -221,29 +211,24 @@ byte stageLEDs[4]={A0,A1,A2,A3};
 
 // stepOut
 // One pulse at these pins moves the motor by one step (or one micro-step)
-byte stepOut[maxAxes]={44,31,47,28}; //Set these to the step out pins (ordered X, Y, and Z)
+byte stepOut[maxAxes]={44,31,47,28}; //Set these to the step out pins (ordered X, Y, Z, Z')
 
 // stepDir
 // These pins tell the Big Easy Driver to which they connect which direction to rotate the motor
-byte stepDir[maxAxes]={45,30,46,29}; //Ordered X, Y, and Z
+byte stepDir[maxAxes]={45,30,46,29}; //Ordered X, Y, Z, Z'
 
 // enable
 // If these pins are low, the motor is enabled. If high it's disabled. Disabling might decrease 
 // electrical noise but will lead to errors in absolute positioning. 
-byte enable[maxAxes]={39,36,7,23}; //Ordered X, Y, and Z
+byte enable[maxAxes]={39,36,7,23}; //Ordered X, Y, Z, Z' 
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
 
-//following are ch1 [FOLLOWING THREE DEFS WILL GO, IN FACT, WE SHOULD RE-DO ALL THE CODE THIS WAY]
-byte MS1=42;
-byte MS2=43;
-byte MS3=40;
-
 //Let's define an array with the microstepping pins
 byte MS[4][3]={ 
 	{42,43,40},  //channel 1, MS pins 1,2,3
-	{33,32,36},  //channel 2, MS pins 1,2,3
+	{33,32,35},  //channel 2, MS pins 1,2,3
 	{49,48,10},  //channel 3, MS pins 1,2,3
 	{26,27,24}   //channel 4, MS pins 1,2,3
 	};
