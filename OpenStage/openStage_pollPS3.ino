@@ -27,11 +27,23 @@ int pollPS3(){
   // The home (upright) position has a value of 127, so motion speed in any particular direction 
   // can be defined with a 7 bit resolution at most. 
   short hatVals[numAxes]; //X,Y,Z stick values 
+  
+  #ifdef AXIS_1
+   hatVals[0]=127.5-PS3.getAnalogHat(LeftHatX);
+  #endif
+  
+  #ifdef AXIS_2 
+   hatVals[1]=127.5-PS3.getAnalogHat(LeftHatY);
+  #endif
 
-  hatVals[0]=127.5-PS3.getAnalogHat(LeftHatX);
-  hatVals[1]=127.5-PS3.getAnalogHat(LeftHatY);
-  hatVals[2]=127.5-PS3.getAnalogHat(RightHatY);
-  //hatVals[3]=127.5-PS3.getAnalogHat(RightHatX); //FOURTH AXIS
+  #ifdef AXIS_3
+   hatVals[2]=127.5-PS3.getAnalogHat(RightHatY);
+  #endif
+
+  #ifdef AXIS_4
+   hatVals[3]=127.5-PS3.getAnalogHat(RightHatX);
+  #endif
+
 
   // stage LEDpins
   //This number will be incremented using bit shifts to allow rapid LED switching
