@@ -175,13 +175,16 @@ int pollPS3(){
 
   //Handle the D-Pad: make fixed size (blocking) motions in X, Y, or Z
 
-  //Z motion (up/down plus triangle button)
+  //Z and z motion (up/down plus triangle button)
   if (PS3.getButtonPress(TRIANGLE)){
     if (PS3.getButtonClick(UP))
       dButtonMove(2,+1);
     if (PS3.getButtonClick(DOWN))
-    dButtonMove(2,-1);
-
+      dButtonMove(2,-1);
+   if (PS3.getButtonClick(LEFT))
+      dButtonMove(3,+1);
+   if (PS3.getButtonClick(RIGHT))
+      dButtonMove(3,-1);
   } else {
 
     //X motion
