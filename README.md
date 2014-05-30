@@ -1,7 +1,8 @@
 
-<h1><span style="color:#00979d;">Open</span><span style="color:#666666;">Stage</span></h1>
+<h1>OpenStage</h1>
 
-OpenStage microscope stage controller for Arduino
+<img src="OpenStageBuildNotes/images/openstage_cover.jpg" />
+Open source microscope stage controller
 
 
 OpenStage is a hardware and software solution for cheaply motorizing a microscope stage. The system is accurate enough even for demanding tasks, such as fine focus operations on a 2-photon microscope. The characteristics of the system are described in our PlosONE paper (http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0088977). The three-axis system described in that paper costs about $1000 (controller + motors + motor coupling hardware). Competing commercial motor solutions cost in the region of $5,000 to $10,000. None of these costs include structural components such as bread-boards, linear translation stages, construction posts, etc, since all of this hardware is required no matter what motor solution is used.
