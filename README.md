@@ -1,4 +1,6 @@
 
+<h1><span style="color:#00979d;">Open</span><span style="color:#666666;">Stage</span></h1>
+
 OpenStage microscope stage controller for Arduino
 
 
