@@ -1,0 +1,14 @@
+\BOOKMARK [1][-]{section*.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section*.4}{Getting power to your board}{}% 2
+\BOOKMARK [1][-]{section*.6}{Soldering small surface mount components}{}% 3
+\BOOKMARK [1][-]{section*.10}{Testing the power}{}% 4
+\BOOKMARK [1][-]{section*.12}{Attach small components}{}% 5
+\BOOKMARK [1][-]{section*.14}{Soldering the headers for the Arduino and USB host shield}{}% 6
+\BOOKMARK [1][-]{section*.17}{Hooking up the Quadstepper}{}% 7
+\BOOKMARK [1][-]{section*.19}{Wiring up the LCD display}{}% 8
+\BOOKMARK [1][-]{section*.21}{Connecting the motors to the DB9 cables}{}% 9
+\BOOKMARK [1][-]{section*.22}{Uploading the firmware}{}% 10
+\BOOKMARK [1][-]{section*.23}{Powering up!}{}% 11
+\BOOKMARK [2][-]{section*.24}{Control via gamepad}{section*.23}% 12
+\BOOKMARK [2][-]{section*.25}{Control via PC}{section*.23}% 13
+\BOOKMARK [2][-]{section*.26}{Accuracy}{section*.23}% 14

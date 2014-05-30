@@ -8,7 +8,7 @@
 \usepackage{graphicx}
 \include{srctex}               % For Latex inverse searc
 \usepackage[bf,footnotesize]{caption} % make captions small and label bold
-
+\usepackage{hyperref}
 \usepackage[letterpaper,margin=3cm,tmargin=2.75cm,bmargin=3cm]{geometry} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -203,7 +203,7 @@ Get a M/M DB9 cable and cut in half. Strip and expose the leads. You will be usi
 
 
 \section{Uploading the firmware}
-The board should now be assembled. Plug in the Arduino Mega, USB host shield, and Quadstepper. If it's not already programmed, hook up the Mega to a PC and upload the OpenStage firmare from the Github page (\textit{https://github.com/raacampbell13/openstage}). You can download as a zip (easy) or clone the repository (if that's your thing). 
+The board should now be assembled. Plug in the Arduino Mega, USB host shield, and Quadstepper. If it's not already programmed, hook up the Mega to a PC and upload the OpenStage firmare from the Github page (\textit{https://github.com/raacampbell13/openstage}). You can download as a zip (easy) or clone the repository (if that's your thing). You will also need to download and install the Arduino USB Host Shield library (\url{<https://github.com/felis/USB_Host_Shield_2.0>}) and the AccelStepper library (\url{<http://www.airspayce.com/mikem/arduino/AccelStepper/>}).
 
 If you haven't programmed an Arduino before, here's what you'll need to do. Download the Arduino IDE from \textit{arduino.cc}. Install the IDE. The source code for the OpenStage firmware is in the `\textit{OpenStage}' sub-directory from the Github repository. There are a bunch of source code files here. Unless you want to make significant changes to the firmware, you don't need to be concerned with most of this. All you care about is the user settings file. There are a bunch of different potential user settings files, depending on the desired configuration of the stage. We want the c\_userSettings\_MEGA\_PCB file. This file should have the extension `.ino'; if it has `.BAK', or any other extension, then rename the file. It should be called `\textit{'c\_userSettings\_MEGA\_PCB.ino'}. When you try to compile the firmware, the Arduino IDE simply concatenates the .ino files in the directory then compiles the resulting, larger, file. You don't want it to include any of the other c\_userSettings* files. So either delete them or make sure none of them end in .ino 
 
