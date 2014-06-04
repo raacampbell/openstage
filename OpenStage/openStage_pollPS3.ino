@@ -46,8 +46,8 @@ int pollPS3(){
 
 
   // stage LEDpins
-  //This number will be incremented using bit shifts to allow rapid LED switching
-  //http://www.arduino.cc/en/Reference/PortManipulation
+  // This number will be incremented using bit shifts to allow rapid LED switching
+  // http://www.arduino.cc/en/Reference/PortManipulation
   byte stageLEDpins = 0; //Stores which LED pins to flip high 
   bool moving=0;
 
@@ -70,7 +70,7 @@ int pollPS3(){
     if (abs(hatVals[ii])>hatStickThresh){
        stageLEDpins += 1<<ii; //bits shift LED pins as needed
        currentSpeed[ii]=SPEEDMAT[abs(hatVals[ii])][coarseFine-1];
-       (*mySteppers[ii]).setSpeed( (currentSpeed[ii]/thisStep[ii][coarseFine-1])*sgn(hatVals[ii]) );    
+       (*mySteppers[ii]).setSpeed( (currentSpeed[ii]/thisStep[ii][coarseFine-1])*sgn(hatVals[ii])*hatInvert[ii] );    
        moving=1;
        if (disableWhenStationary[ii])
           digitalWrite(enable[ii],LOW);

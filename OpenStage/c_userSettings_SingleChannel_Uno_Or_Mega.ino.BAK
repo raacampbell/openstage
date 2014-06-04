@@ -204,7 +204,9 @@ unsigned int moveToSpeed[maxAxes]={1600,1600,1200,1600};
 unsigned int moveToAccel[maxAxes]={1.0E4,1.0E4,1.0E4,1.0E4};
 
 
-
+// * Allow for inverting of hat-stick motions
+// to invert hat-stick motion direction set to -1, otherwise set to 1. 
+short hatInvert[maxAxes]={1,1,1,1};
 
 
 //---------------------------------UNLIKELY TO NEED TO CHANGE THESE-------------------------------
