@@ -142,13 +142,16 @@ unsigned long DPadAccel[maxAxes]={1.0E4, 1.0E4, 1.0E4, 1.0E4};
 //
 // The moveToTarget() function is executed when the user travels to a right-button set point
 // or responds to a serial command. It does this using the settings described below. The minimum
-// step size and motor RPM are reported to the serial terminal on bootup.
+// step size and motor RPM are reported to the serial terminal on bootup. Keep speeds below
+// stalling value. Also, remember that the AccelStepper library won't produce pulse rates above
+// about 4 kHz.
 float moveToStepSize=1.0/2.0;
 unsigned int moveToSpeed[maxAxes]={1600,1600,1200,1600}; 
 unsigned int moveToAccel[maxAxes]={1.0E4,1.0E4,1.0E4,1.0E4};
 
-
-
+// * Allow for inverting of hat-stick motions
+// to invert hat-stick motion direction set to -1, otherwise set to 1. 
+short hatInvert[maxAxes]={1,1,1,1};
 
 
 //---------------------------------UNLIKELY TO NEED TO CHANGE THESE-------------------------------
