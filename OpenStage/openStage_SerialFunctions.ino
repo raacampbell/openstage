@@ -236,16 +236,24 @@ void serial_moveToAccel(){
 // Reports a bunch of useful information to the serial port as text
 void reportInfo(){
   byte ii;
-
-  SerialComms->print("Gear Ratios: ");
+  
+  SerialComms->println("OpenStage Settings Information");
+  
+  SerialComms->print("Number of axes: ");
+  SerialComms->print(numAxes);
+  SerialComms->print('\n');
+  
+  
+  
+  SerialComms->print("Gear Ratios at each axis: ");
   for (ii=0; ii<numAxes; ii++){
     SerialComms->print(gearRatio[ii]);
     if (ii<numAxes-1)
        SerialComms->print(",");
     }
-    SerialComms->print('\n');
+    SerialComms->println(" microns/rev");
 
-  SerialComms->print("Full Steps Per Rev: ");
+  SerialComms->print("Motor Full Steps Per Rev at each axis: ");
   for (ii=0; ii<numAxes; ii++){
     SerialComms->print(int(1/(fullStep[ii]/360.0)));
     if (ii<numAxes-1)
@@ -253,7 +261,7 @@ void reportInfo(){
    }
     SerialComms->print('\n');
 
-  SerialComms->print("Hat Stick max speeds: ");
+  SerialComms->print("Hat Stick max speeds (speed modes 1 to 4) : ");
   for (ii=0; ii<4; ii++){
     SerialComms->print(maxSpeed[ii]);
     if (ii<3)
@@ -262,7 +270,7 @@ void reportInfo(){
   SerialComms->print('\n');
   SerialComms->print('\n');
   
-  SerialComms->print("moveTo() speeds:");
+  SerialComms->print("Serial move specs at each axis:");
   SerialComms->print('\n');
   for (ii=0; ii<numAxes; ii++){
     SerialComms->print(ii+1);
