@@ -211,7 +211,7 @@ Now you're good to go! Open the file `\textit{OpenStage.ino}' in the Arduino IDE
 
 You will need to carefully set the `Microscope axis hardware definitions.' If you want three axes then leave the first bit of that section (up to `gear ratio') as is. What you likely will need to do is modify the gearRatio vector. Those numbers indicate the number of microns the stage will advance when the micrometer rotates revolution. e.g. The standard ThorLabs micrometers are 100 turns per inch; the imperial units advance 635 $\mu m$ per revolution and the metric ones 500 $\mu m$ per revolution. Each axis can have a different value, allowing finer motions for $z$, say. Similarly, you will need to define the number of degrees the stepper motors advance when they take a full step. Chances are you will have motors which are 1.8 degree (200 steps per revolution) or 0.9 degree (400 steps per revolution). Armed with these two pieces of information, OpenStage can determine its relative position in space with very high accuracy. 
 
-The remaining parameters are less critical. They relate to things such as the speeds and step sizes that the PS3 game pad produces and the default speeds on each axis for PC-based control. Many of these settings can be altered via the serial port. You won't need to change the pin definitions at the end of the file. 
+The remaining parameters are less critical. They relate to things such as the speeds and step sizes that the PS3 game pad produces and the default speeds on each axis for PC-based control. Many of these settings can be altered via the serial port (see the serial port commands directory). You won't need to change the pin definitions at the end of the file. 
 
 \section{Powering up!}
 You're now ready to power up. Connect your power line and PS3 game pad. Hook up the motors (do not plug or unplug the motors with the power on). If you want computer control, hook up the USB cord or the serial port to your PC. To begin with, it might be sensible not to connect the motors to the rig. Attach little pieces of tape to the spindle to watch them move. Make sure the switch on USB host shield is set to `on'. Switch on OpenStage. You should see a `Booting...' message on the LCD display. The boot sequence should complete in about 5 seconds. Once it has booted you can control the stage using either a PC or the gamepad. 
@@ -263,6 +263,20 @@ The stage controller has no feedback. It issues motion commands as TTL step puls
 
 In a stepper motor, torque decreases with increasing speed. So moving too fast will cause skipped steps. The higher the load on the motors, the lower the maximum speed. If you accelerate too quickly the motors may skip. If the current is too low, the motors will skip. If you're using full steps, it's very likely you will get many skipped steps unless the motor current is set \textit{just right}. So avoid full steps. Half steps and smaller are much smoother and won't skip. If you don't know anything about stepper motor microstepping, then do a little Googling or read our paper.
 
+
+\subsection{Stage Speed}
+The main limitation of the current firmware is the way in which it handles pulse rates. The accelstepper library, which is used to issue the step pulse pulses and implement acceleration and deceleration, has some substantial limitations. If speed is a concern, read the following carefully. 
+
+Firstly, the OpenStage firmware can issue a maximum step pulse rate of about 4~kHz in one axis. So to get the fastest motions you will have to move in half steps. Avoid full steps if possible. Full steps can work, but the current to the motors has to be just right or they will skip. If you want to move fast, use a 500~$\mu m/rev$ micrometer. As you can see, there is a trade off between speed and accuracy. 
+
+Secondly, this maximum speed drops when multiple axes are being moved together. For instance, if you command a motion of 5000~$\mu m$ in $z$ and 2000~$\mu m$ in $x$ then $z$ will move slowly until $x$ has reached its target position. 
+
+Thirdly, OpenStage doesn't check that your requested maximum speed is even possible. So if you ask for, say, 2000~$\mu m/s$ with a 250~$\mu m/rev$ gear at half steps then you'd need well in excess of 4~$kHz$ to achieve this. OpenStage will simply move as fast as it can to reach the desired location; it will get there accurately but not at the speed you asked for. 
+
+How can you explore the speed of your stage? To begin with, hook up the BNC connection of the axis of interest to a scope. You'll be able to see the frequency of the pulse trains going to the motor. In addition, issue the 
+\textit{OS\_getInfo} command. This will show you the target pulse rate for the speed and step size you've chosen. Likely you will find it's undershooting the desired pulse rate. 
+
+Can the firmware be improved? The accelstepper library appears to generate the timing pulses using software. However, the Arduino Mega has three spare hardware timers. There is currently a (very) beta version of the firmware that uses these hardware timers to produce the pulse trains. The advantages of this are that we can generate much higher frequency pulse trains (about 25~$kHz$) and this can be done using multiple axes simultaneously with no speed loss. This will allow for higher speed accuracy. If you're interested in this, please e-mail me to speed up development. It may be some time before I have a working version of this firmware. 
 
 
 \end{document}
