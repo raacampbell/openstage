@@ -78,7 +78,7 @@ You can use only the serial port as the input device, but the PS3 dual shock is 
 This wiring diagram is also shown in our paper.
 
 
-The libraries to interface with the DualShock are found here: http://www.circuitsathome.com/arduino_usb_host_shield_projects (see link to the GitHub repository). You will note that there are drivers for XBox and Wii controllers also. However, our code assumes a DualShock. You can plug the controller directly into the USB shield with a mini USB cable or you can use Bluetooth if you can find a compatible dongle.
+The libraries to interface with the DualShock are found here: https://github.com/felis/USB_Host_Shield_2.0. You will note that there are drivers for XBox and Wii controllers also. However, our code assumes a DualShock. You can plug the controller directly into the USB shield with a mini USB cable or you can use Bluetooth if you can find a compatible dongle.
 
 
 
