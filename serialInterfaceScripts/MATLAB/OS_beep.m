@@ -13,4 +13,3 @@ if isempty(OS), OS=connectOpenStage; end
 
 
 fwrite(OS,'b')
-    

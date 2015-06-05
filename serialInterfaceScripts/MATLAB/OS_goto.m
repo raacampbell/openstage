@@ -51,8 +51,8 @@ coords=round(coords*1.0E3);
 
 AX=repmat('%d,',1,nAxes);
 AX(end)='$';
-str=sprintf(['g%s',AX], motionType, coords);
-fwrite(OS,str)
+str=sprintf(['g%s',AX], motionType, coords); 
+fwrite(OS,str) %e.g. str will be something like 'ga300,300,300$'
     
 
 
