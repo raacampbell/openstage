@@ -115,9 +115,12 @@ byte enable[maxAxes]={3,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=4;
-byte MS2=5;
-byte MS3=6;
+byte MS[4][3]={ 
+	{45,47,49},  //channel 1, MS pins 1,2,3
+	{45,47,49},  //channel 2, MS pins 1,2,3
+	{45,47,49},  //channel 3, MS pins 1,2,3
+	{45,47,49}   //channel 4, MS pins 1,2,3
+	};
 
 
 

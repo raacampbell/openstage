@@ -90,9 +90,6 @@ bool disableWhenStationary[maxAxes]={0,0,0,0};
 
 
 
-
-
-
 //------------------------------------------------------------------------------------------------
 // * Motor control DIO lines
 // Alter the following based on how your system is wired. 
@@ -112,12 +109,12 @@ byte enable[maxAxes]={28,29,30,0}; //Ordered X, Y, and Z
 
 // The microstep pins.
 // These pins define the microstep size. The MS pins on all axes are wired together.
-byte MS1=45;
-byte MS2=47;
-byte MS3=49;
-
-
-
+byte MS[4][3]={ 
+	{45,47,49},  //channel 1, MS pins 1,2,3
+	{45,47,49},  //channel 2, MS pins 1,2,3
+	{45,47,49},  //channel 3, MS pins 1,2,3
+	{45,47,49}   //channel 4, MS pins 1,2,3
+	};
 
 
 
@@ -203,8 +200,9 @@ float moveToStepSize=1.0/2.0;
 unsigned int moveToSpeed[maxAxes]={1600,1600,1200,1600}; 
 unsigned int moveToAccel[maxAxes]={1.0E4,1.0E4,1.0E4,1.0E4};
 
-
-
+// * Allow for inverting of hat-stick motions
+// to invert hat-stick motion direction set to -1, otherwise set to 1. 
+short hatInvert[maxAxes]={1,1,1,1};
 
 
 //---------------------------------UNLIKELY TO NEED TO CHANGE THESE-------------------------------
