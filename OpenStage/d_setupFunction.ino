@@ -3,6 +3,23 @@ void setup() {
   bool verbose=0;
 
 
+    //Set up the timers
+    cli();          // disable global interrupts
+    //Zero registers
+    TCCR1A = 0; TCCR1B = 0;     
+    TCCR3A = 0; TCCR3B = 0;     
+    TCCR4A = 0; TCCR4B = 0;     
+    TCCR5A = 0; TCCR5B = 0;     
+
+    // initialize CTC mode for each timer
+    TCCR1B |= (1 << WGM12); // Timer1
+    TCCR3B |= (1 << WGM32); // Timer3
+    TCCR4B |= (1 << WGM42); // Timer4
+    TCCR5B |= (1 << WGM52); // Timer5
+
+    sei();  //enable global interrupts
+
+
   // Connect to the PC's serial port via the Arduino programming USB connection. 
   // This used mainly for printing de-bugging information to the PC's serial terminal
   // during testing. [In future we will add the option for controlling the stage through

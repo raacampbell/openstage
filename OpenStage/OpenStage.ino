@@ -6,6 +6,7 @@
   Copyright (C) 2013 Robert AA Campbell 
   Cold Spring Harbor Laboratory
   July 2013
+  June 2014
   git@raacampbell.com
 
   This program is free software: you can redistribute it and/or modify
