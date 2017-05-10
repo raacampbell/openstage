@@ -20,5 +20,7 @@ The cost savings come from the fact that we are using regular stepper motors ins
 
 The stand-alone controller is based around an Arduino Mega. You can also build a single-axis controller around an Arduino Uno for under $100, but this can't accept a PS3 gamepad as there isn't sufficient SRAM on this device. The controller communicates with a PC via serial or virtual serial (USB) ports. An external LCD display and hand-held controller can also, optionally, be added. There is now a PCB into which all components can easiliy be connected. Instructions of assembly with the first version of the PCB are in the repository. There is a new (untested) version of the PCB <a href="https://oshpark.com/shared_projects/8WlR0lh0">here</a>. I have a limited number of of the first version still available to send out (contact me via github).
 
-<h2>Arduino Mega ADK</h2>
-Users report that if the <a href="https://www.arduino.cc/en/Main/ArduinoBoardMegaADK">Arduino Mega ADK</a> is used, the project will run out of the box without the USB host shield.
+## Updates
+
+* *Arduino Mega ADK* - Users report that if the <a href="https://www.arduino.cc/en/Main/ArduinoBoardMegaADK">Arduino Mega ADK</a> is used, the project will run out of the box without the USB host shield.
+* [Bluetooth gamepad connection details](https://github.com/raacampbell/openstage/issues/11#issuecomment-300612226)
