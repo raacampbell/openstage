@@ -27387,10 +27387,14 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="P+2" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="P+3" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
 <part name="P+4" library="supply1" library_urn="urn:adsk.eagle:library:371" deviceset="+5V" device=""/>
-<part name="C8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1"/>
-<part name="C9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1"/>
-<part name="C10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1"/>
-<part name="C11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1"/>
+<part name="C8" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1" value="100u"/>
+<part name="C9" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1" value="100u"/>
+<part name="C10" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1" value="100u"/>
+<part name="C11" library="rcl" library_urn="urn:adsk.eagle:library:334" deviceset="CPOL-EU" device="E2.5-5" package3d_urn="urn:adsk.eagle:package:23344/1" value="100u"/>
+<part name="GND3" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND11" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
+<part name="GND24" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -27772,13 +27776,25 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <attribute name="NAME" x="143.383" y="109.7026" size="1.778" layer="95"/>
 <attribute name="VALUE" x="143.383" y="104.6226" size="1.778" layer="96"/>
 </instance>
-<instance part="C10" gate="G$1" x="78.74" y="73.66" smashed="yes">
-<attribute name="NAME" x="79.883" y="74.1426" size="1.778" layer="95"/>
-<attribute name="VALUE" x="79.883" y="69.0626" size="1.778" layer="96"/>
+<instance part="C10" gate="G$1" x="78.74" y="71.12" smashed="yes">
+<attribute name="NAME" x="79.883" y="71.6026" size="1.778" layer="95"/>
+<attribute name="VALUE" x="79.883" y="66.5226" size="1.778" layer="96"/>
 </instance>
-<instance part="C11" gate="G$1" x="132.08" y="25.4" smashed="yes">
-<attribute name="NAME" x="133.223" y="25.8826" size="1.778" layer="95"/>
-<attribute name="VALUE" x="133.223" y="20.8026" size="1.778" layer="96"/>
+<instance part="C11" gate="G$1" x="137.16" y="25.4" smashed="yes">
+<attribute name="NAME" x="138.303" y="25.8826" size="1.778" layer="95"/>
+<attribute name="VALUE" x="138.303" y="20.8026" size="1.778" layer="96"/>
+</instance>
+<instance part="GND3" gate="1" x="81.28" y="129.54" smashed="yes">
+<attribute name="VALUE" x="78.74" y="127" size="1.778" layer="96"/>
+</instance>
+<instance part="GND4" gate="1" x="142.24" y="101.6" smashed="yes">
+<attribute name="VALUE" x="139.7" y="99.06" size="1.778" layer="96"/>
+</instance>
+<instance part="GND11" gate="1" x="78.74" y="63.5" smashed="yes">
+<attribute name="VALUE" x="76.2" y="60.96" size="1.778" layer="96"/>
+</instance>
+<instance part="GND24" gate="1" x="137.16" y="17.78" smashed="yes">
+<attribute name="VALUE" x="134.62" y="15.24" size="1.778" layer="96"/>
 </instance>
 </instances>
 <busses>
@@ -28008,6 +28024,22 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="J5" gate="G$1" pin="MH1"/>
 <pinref part="GND37" gate="1" pin="GND"/>
 <wire x1="330.2" y1="204.47" x2="334.01" y2="204.47" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="GND3" gate="1" pin="GND"/>
+<pinref part="C8" gate="G$1" pin="-"/>
+</segment>
+<segment>
+<pinref part="GND4" gate="1" pin="GND"/>
+<pinref part="C9" gate="G$1" pin="-"/>
+</segment>
+<segment>
+<pinref part="GND11" gate="1" pin="GND"/>
+<pinref part="C10" gate="G$1" pin="-"/>
+</segment>
+<segment>
+<pinref part="GND24" gate="1" pin="GND"/>
+<pinref part="C11" gate="G$1" pin="-"/>
 </segment>
 </net>
 <net name="RES" class="0">
@@ -28566,21 +28598,43 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <pinref part="+9V3" gate="G$1" pin="VCC"/>
 <wire x1="58.42" y1="140.97" x2="63.5" y2="140.97" width="0.1524" layer="91"/>
 <pinref part="M1" gate="G$1" pin="VMOT"/>
+<pinref part="C8" gate="G$1" pin="+"/>
+<wire x1="81.28" y1="139.7" x2="63.5" y2="139.7" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="139.7" x2="63.5" y2="140.97" width="0.1524" layer="91"/>
+<junction x="63.5" y="140.97"/>
 </segment>
 <segment>
 <pinref part="+9V5" gate="G$1" pin="VCC"/>
 <wire x1="120.65" y1="115.57" x2="125.73" y2="115.57" width="0.1524" layer="91"/>
 <pinref part="M2" gate="G$1" pin="VMOT"/>
+<pinref part="C9" gate="G$1" pin="+"/>
+<wire x1="142.24" y1="111.76" x2="142.24" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="142.24" y1="114.3" x2="125.73" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="125.73" y1="114.3" x2="125.73" y2="115.57" width="0.1524" layer="91"/>
+<junction x="125.73" y="115.57"/>
 </segment>
 <segment>
 <pinref part="+9V7" gate="G$1" pin="VCC"/>
 <wire x1="58.42" y1="77.47" x2="63.5" y2="77.47" width="0.1524" layer="91"/>
 <pinref part="M3" gate="G$1" pin="VMOT"/>
+<wire x1="78.74" y1="76.2" x2="63.5" y2="76.2" width="0.1524" layer="91"/>
+<wire x1="63.5" y1="76.2" x2="63.5" y2="77.47" width="0.1524" layer="91"/>
+<junction x="63.5" y="77.47"/>
+<pinref part="C10" gate="G$1" pin="+"/>
+<wire x1="78.74" y1="74.93" x2="78.74" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="78.74" y1="73.66" x2="78.74" y2="76.2" width="0.1524" layer="91"/>
+<junction x="78.74" y="73.66"/>
 </segment>
 <segment>
 <pinref part="+9V9" gate="G$1" pin="VCC"/>
 <wire x1="120.65" y1="49.53" x2="125.73" y2="49.53" width="0.1524" layer="91"/>
 <pinref part="M4" gate="G$1" pin="VMOT"/>
+<pinref part="C11" gate="G$1" pin="+"/>
+<wire x1="137.16" y1="27.94" x2="137.16" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="48.26" x2="124.46" y2="48.26" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="48.26" x2="124.46" y2="49.53" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="49.53" x2="125.73" y2="49.53" width="0.1524" layer="91"/>
+<junction x="125.73" y="49.53"/>
 </segment>
 </net>
 <net name="+5V" class="0">

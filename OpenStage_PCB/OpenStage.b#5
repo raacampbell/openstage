@@ -220,7 +220,6 @@ trim pot.</text>
 <text x="133.6675" y="132.715" size="1.778" layer="25" font="vector" rot="SR270">4</text>
 <text x="136.2075" y="132.715" size="1.143" layer="25" font="vector" rot="SR270">12</text>
 <text x="56.1975" y="121.6025" size="1.27" layer="26" font="vector" rot="MR0">GND</text>
-<text x="49.53" y="46.99" size="1.27" layer="26" font="vector" rot="MR0">+9V</text>
 <text x="25.4" y="67.6275" size="1.27" layer="26" font="vector" rot="MR0">+DC V</text>
 <text x="149.5425" y="18.415" size="1.016" layer="25" font="vector" rot="SR270">1</text>
 <text x="149.5425" y="32.0675" size="1.016" layer="25" font="vector" rot="SR270">2</text>
@@ -3411,21 +3410,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 </package>
 </packages>
 </library>
-<library name="testpad">
-<description>&lt;b&gt;Test Pins/Pads&lt;/b&gt;&lt;p&gt;
-Cream on SMD OFF.&lt;br&gt;
-new: Attribute TP_SIGNAL_NAME&lt;br&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="TP20SQ">
-<description>&lt;b&gt;TEST PAD&lt;/b&gt;</description>
-<smd name="TP" x="0" y="0" dx="2" dy="2" layer="1" cream="no"/>
-<text x="-1" y="1.05" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.016" y="-1.143" size="0.0254" layer="27">&gt;VALUE</text>
-<text x="0" y="-2.54" size="1" layer="37">&gt;TP_SIGNAL_NAME</text>
-</package>
-</packages>
-</library>
 <library name="A4988_STEPPER_MOTOR_DRIVER_CARRIER">
 <packages>
 <package name="POLOLU_CARRIER">
@@ -3834,13 +3818,6 @@ design rules under a new name.</description>
 </element>
 <element name="RFET" library="resistor" package="R3216" value="20k" x="51.435" y="126.746" smashed="yes" rot="MR180">
 <attribute name="VALUE" x="50.038" y="129.159" size="1.27" layer="26" rot="MR180"/>
-</element>
-<element name="TP3" library="testpad" package="TP20SQ" value="TPSTP20SQ" x="47.9425" y="49.53" smashed="yes" rot="MR0">
-<attribute name="TP_SIGNAL_NAME" value="" x="47.9425" y="46.99" size="1" layer="38" rot="MR0"/>
-</element>
-<element name="TP4" library="testpad" package="TP20SQ" value="TPSTP20SQ" x="22.225" y="66.04" smashed="yes" rot="MR0">
-<attribute name="TP_SIGNAL_NAME" value="" x="22.225" y="63.5" size="1" layer="38" rot="MR0"/>
-<attribute name="VALUE" x="23.241" y="64.897" size="0.0254" layer="28" rot="MR0"/>
 </element>
 <element name="M1" library="A4988_STEPPER_MOTOR_DRIVER_CARRIER" package="POLOLU_CARRIER" value="STEPPER_DRIVER" x="27.6225" y="105.0925" smashed="yes" rot="R180">
 <attribute name="AVAILABILITY" value="Unavailable" x="44.45" y="80.3275" size="1.778" layer="27" rot="R180" display="off"/>
@@ -4579,9 +4556,6 @@ design rules under a new name.</description>
 <wire x1="57.785" y1="44.1325" x2="34.423146875" y2="44.1325" width="2.54" layer="16"/>
 <wire x1="34.423146875" y1="44.1325" x2="31.115" y2="47.795090625" width="2.54" layer="16"/>
 <wire x1="31.115" y1="47.795090625" x2="31.115" y2="59.2455" width="2.54" layer="16"/>
-<contactref element="TP4" pad="TP"/>
-<wire x1="22.0345" y1="59.4995" x2="22.0345" y2="65.8495" width="0.6096" layer="16"/>
-<wire x1="22.0345" y1="65.8495" x2="22.225" y2="66.04" width="0.6096" layer="16"/>
 </signal>
 <signal name="VCC" class="1">
 <contactref element="U2" pad="VIN"/>
@@ -4604,9 +4578,7 @@ design rules under a new name.</description>
 <wire x1="89.97" y1="49.6475" x2="69.65" y2="49.6475" width="0.4064" layer="1"/>
 <via x="69.65" y="49.6475" extent="1-16" drill="0.6" shape="square"/>
 <wire x1="69.65" y1="49.6475" x2="51.5125" y2="49.6475" width="0.6096" layer="16"/>
-<contactref element="TP3" pad="TP"/>
-<wire x1="47.9425" y1="49.53" x2="41.91" y2="53.34" width="0.4064" layer="16"/>
-<wire x1="41.91" y1="53.34" x2="41.91" y2="56.4515" width="0.4064" layer="16"/>
+<wire x1="41.91" y1="53.971578125" x2="41.91" y2="56.4515" width="0.4064" layer="16"/>
 <wire x1="41.91" y1="56.4515" x2="44.2595" y2="59.436" width="0.4064" layer="16"/>
 <contactref element="M1" pad="16"/>
 <contactref element="M2" pad="16"/>
@@ -4933,9 +4905,11 @@ design rules under a new name.</description>
 <contactref element="M4" pad="13"/>
 <wire x1="41.5925" y1="80.3275" x2="39.8" y2="80.3275" width="0.3" layer="16"/>
 <wire x1="39.8" y1="80.3275" x2="39.8" y2="71.4" width="0.3" layer="16"/>
-<wire x1="39.8" y1="71.4" x2="38.8" y2="70.4" width="0.3" layer="16"/>
-<wire x1="38.8" y1="70.4" x2="17.8" y2="70.4" width="0.3" layer="16"/>
-<wire x1="17.8" y1="70.4" x2="10.8" y2="63.4" width="0.3" layer="16"/>
+<wire x1="39.8" y1="71.4" x2="36.8" y2="68.4" width="0.3" layer="16"/>
+<wire x1="36.8" y1="68.4" x2="32.6" y2="68.4" width="0.3" layer="16"/>
+<wire x1="32.6" y1="68.4" x2="28.6" y2="64.4" width="0.3" layer="16"/>
+<wire x1="28.6" y1="64.4" x2="11.8" y2="64.4" width="0.3" layer="16"/>
+<wire x1="11.8" y1="64.4" x2="10.8" y2="63.4" width="0.3" layer="16"/>
 <wire x1="10.8" y1="63.4" x2="10.8" y2="56.4" width="0.3" layer="16"/>
 <contactref element="J5" pad="4"/>
 <wire x1="7.05" y1="52.65" x2="10.8" y2="56.4" width="0.3" layer="16"/>
@@ -4946,12 +4920,14 @@ design rules under a new name.</description>
 <wire x1="7.05" y1="49.5" x2="8.35" y2="48.2" width="0.3" layer="16"/>
 <wire x1="8.35" y1="48.2" x2="10.6" y2="48.2" width="0.3" layer="16"/>
 <wire x1="10.6" y1="48.2" x2="13.6" y2="51.2" width="0.3" layer="16"/>
-<wire x1="40.8" y1="69.4" x2="43.1925" y2="71.7925" width="0.3" layer="16"/>
+<wire x1="39" y1="67.6" x2="43.1925" y2="71.7925" width="0.3" layer="16"/>
 <wire x1="43.1925" y1="76.1875" x2="43.1925" y2="71.7925" width="0.3" layer="16"/>
 <wire x1="43.1925" y1="76.1875" x2="41.5925" y2="77.7875" width="0.3" layer="16"/>
 <wire x1="13.6" y1="51.2" x2="13.6" y2="63.4" width="0.3" layer="16"/>
-<wire x1="13.6" y1="63.4" x2="19.6" y2="69.4" width="0.3" layer="16"/>
-<wire x1="19.6" y1="69.4" x2="40.8" y2="69.4" width="0.3" layer="16"/>
+<wire x1="13.6" y1="63.4" x2="13.8" y2="63.6" width="0.3" layer="16"/>
+<wire x1="13.8" y1="63.6" x2="29.2" y2="63.6" width="0.3" layer="16"/>
+<wire x1="29.2" y1="63.6" x2="33.2" y2="67.6" width="0.3" layer="16"/>
+<wire x1="33.2" y1="67.6" x2="39" y2="67.6" width="0.3" layer="16"/>
 </signal>
 <signal name="OUT2B_1" class="1">
 <contactref element="M1" pad="14"/>

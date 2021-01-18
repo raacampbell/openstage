@@ -19847,10 +19847,10 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 <pinref part="M4" gate="G$1" pin="2A"/>
 </segment>
 <segment>
-<label x="344.17" y="194.31" size="1.778" layer="95"/>
-<wire x1="343.0524" y1="194.31" x2="344.17" y2="194.31" width="0.1524" layer="91"/>
-<pinref part="J5" gate="G$1" pin="3"/>
-<wire x1="342.9" y1="194.31" x2="343.0524" y2="194.31" width="0.1524" layer="91"/>
+<label x="344.17" y="191.77" size="1.778" layer="95"/>
+<wire x1="343.0524" y1="191.77" x2="344.17" y2="191.77" width="0.1524" layer="91"/>
+<pinref part="J5" gate="G$1" pin="4"/>
+<wire x1="342.9" y1="191.77" x2="343.0524" y2="191.77" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="OUT2B_4" class="1">
@@ -19860,10 +19860,10 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 <pinref part="M4" gate="G$1" pin="2B"/>
 </segment>
 <segment>
-<label x="344.17" y="191.77" size="1.778" layer="95"/>
-<wire x1="343.0524" y1="191.77" x2="344.17" y2="191.77" width="0.1524" layer="91"/>
-<pinref part="J5" gate="G$1" pin="4"/>
-<wire x1="342.9" y1="191.77" x2="343.0524" y2="191.77" width="0.1524" layer="91"/>
+<label x="344.17" y="194.31" size="1.778" layer="95"/>
+<wire x1="343.0524" y1="194.31" x2="344.17" y2="194.31" width="0.1524" layer="91"/>
+<pinref part="J5" gate="G$1" pin="3"/>
+<wire x1="342.9" y1="194.31" x2="343.0524" y2="194.31" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="OUT2B_1" class="1">

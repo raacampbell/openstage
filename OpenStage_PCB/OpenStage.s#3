@@ -17487,6 +17487,8 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 <class number="1" name="thick" width="0.3" drill="0.002540625">
 <clearance class="1" value="0.1"/>
 </class>
+<class number="2" name="thicker" width="0.5" drill="0">
+</class>
 </classes>
 <parts>
 <part name="FRAME1" library="SparkFun" deviceset="FRAME-A3" device=""/>
@@ -18729,7 +18731,7 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 <junction x="69.85" y="227.33"/>
 </segment>
 </net>
-<net name="VCC" class="1">
+<net name="VCC" class="2">
 <segment>
 <pinref part="U2" gate="G$1" pin="VIN"/>
 <wire x1="345.44" y1="74.93" x2="337.82" y2="74.93" width="0.1524" layer="91"/>

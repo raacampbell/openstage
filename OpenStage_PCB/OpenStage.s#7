@@ -19189,8 +19189,8 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 </segment>
 <segment>
 <label x="76.2" y="110.49" size="1.778" layer="95"/>
-<pinref part="M2" gate="G$1" pin="STEP"/>
-<wire x1="85.09" y1="102.87" x2="83.82" y2="110.49" width="0.1524" layer="91"/>
+<pinref part="M2" gate="G$1" pin="!ENABLE"/>
+<wire x1="85.09" y1="110.49" x2="83.82" y2="110.49" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="EN_1" class="0">
@@ -19202,8 +19202,8 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 </segment>
 <segment>
 <label x="13.97" y="135.89" size="1.778" layer="95"/>
-<pinref part="M1" gate="G$1" pin="DIR"/>
-<wire x1="22.86" y1="125.73" x2="21.59" y2="135.89" width="0.1524" layer="91"/>
+<pinref part="M1" gate="G$1" pin="!ENABLE"/>
+<wire x1="22.86" y1="135.89" x2="21.59" y2="135.89" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SLP_1" class="0">
@@ -19291,8 +19291,8 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 </segment>
 <segment>
 <label x="13.97" y="125.73" size="1.778" layer="95"/>
-<wire x1="22.86" y1="135.89" x2="21.59" y2="125.73" width="0.1524" layer="91"/>
-<pinref part="M1" gate="G$1" pin="!ENABLE"/>
+<wire x1="22.86" y1="125.73" x2="21.59" y2="125.73" width="0.1524" layer="91"/>
+<pinref part="M1" gate="G$1" pin="DIR"/>
 </segment>
 </net>
 <net name="STP_1" class="0">
@@ -19635,8 +19635,8 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 </segment>
 <segment>
 <label x="76.2" y="102.87" size="1.778" layer="95"/>
-<wire x1="85.09" y1="110.49" x2="83.82" y2="102.87" width="0.1524" layer="91"/>
-<pinref part="M2" gate="G$1" pin="!ENABLE"/>
+<wire x1="85.09" y1="102.87" x2="83.82" y2="102.87" width="0.1524" layer="91"/>
+<pinref part="M2" gate="G$1" pin="STEP"/>
 </segment>
 </net>
 <net name="N$10" class="0">

@@ -19529,18 +19529,6 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 <pinref part="P+2" gate="1" pin="+5V"/>
 </segment>
 <segment>
-<pinref part="C7" gate="G$1" pin="1"/>
-<pinref part="U$4" gate="G$1" pin="VCC"/>
-<wire x1="322.58" y1="154.94" x2="330.2" y2="154.94" width="0.1524" layer="91"/>
-<junction x="322.58" y="154.94"/>
-<wire x1="322.58" y1="165.1" x2="322.58" y2="154.94" width="0.1524" layer="91"/>
-<pinref part="C6" gate="G$1" pin="2"/>
-<wire x1="309.88" y1="165.1" x2="322.58" y2="165.1" width="0.1524" layer="91"/>
-<label x="320.04" y="170.18" size="1.778" layer="95" rot="R180"/>
-<junction x="322.58" y="165.1"/>
-<wire x1="322.58" y1="165.1" x2="322.58" y2="170.18" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="PCB2" gate="G$1" pin="5V"/>
 <wire x1="152.4" y1="200.66" x2="134.62" y2="200.66" width="0.1524" layer="91"/>
 <label x="132.08" y="200.66" size="1.778" layer="95"/>
@@ -20165,11 +20153,30 @@ Source: &lt;a href="http://www.amphenolltw.com/2012download/2D PDF/03_M Series S
 <pinref part="R15" gate="G$1" pin="1"/>
 <wire x1="299.72" y1="91.44" x2="299.72" y2="86.36" width="0.1524" layer="91"/>
 <label x="299.72" y="83.82" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="R16" gate="G$1" pin="1"/>
 <wire x1="320.04" y1="91.44" x2="320.04" y2="86.36" width="0.1524" layer="91"/>
 <label x="320.04" y="83.82" size="1.778" layer="95"/>
+<wire x1="299.72" y1="86.36" x2="312.42" y2="86.36" width="0.1524" layer="91"/>
+<pinref part="U2" gate="G$1" pin="5V"/>
+<wire x1="312.42" y1="86.36" x2="320.04" y2="86.36" width="0.1524" layer="91"/>
+<wire x1="345.44" y1="72.39" x2="340.614" y2="72.39" width="0.1524" layer="91"/>
+<label x="334.518" y="70.358" size="1.778" layer="95"/>
+<wire x1="340.614" y1="72.39" x2="340.36" y2="72.39" width="0.1524" layer="91"/>
+<wire x1="312.42" y1="86.36" x2="312.42" y2="72.39" width="0.1524" layer="91"/>
+<wire x1="312.42" y1="72.39" x2="340.36" y2="72.39" width="0.1524" layer="91"/>
+<junction x="312.42" y="86.36"/>
+</segment>
+<segment>
+<pinref part="C7" gate="G$1" pin="1"/>
+<pinref part="U$4" gate="G$1" pin="VCC"/>
+<wire x1="322.58" y1="154.94" x2="330.2" y2="154.94" width="0.1524" layer="91"/>
+<junction x="322.58" y="154.94"/>
+<wire x1="322.58" y1="165.1" x2="322.58" y2="154.94" width="0.1524" layer="91"/>
+<pinref part="C6" gate="G$1" pin="2"/>
+<wire x1="309.88" y1="165.1" x2="322.58" y2="165.1" width="0.1524" layer="91"/>
+<label x="320.04" y="170.18" size="1.778" layer="95" rot="R180"/>
+<junction x="322.58" y="165.1"/>
+<wire x1="322.58" y1="165.1" x2="322.58" y2="170.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="A14" class="0">

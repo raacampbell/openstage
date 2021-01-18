@@ -201,7 +201,7 @@ Rob Campbell, 2014
 <text x="79.6925" y="43.18" size="0.762" layer="26" rot="MR0">CASE</text>
 <text x="4.7625" y="0.635" size="0.762" layer="26" font="vector" rot="MR0">CASE</text>
 <text x="79.0575" y="9.8425" size="0.762" layer="26" font="vector" rot="MR0">CASE</text>
-<text x="113.03" y="58.42" size="0.762" layer="26" font="vector" rot="MR90">Arduino Mega 2560
+<text x="113.43" y="60.42" size="0.762" layer="26" font="vector" rot="MR90">Arduino Mega 2560
 (plug in this side facing inwards)</text>
 <text x="59.563" y="10.922" size="0.762" layer="26" font="vector" rot="MR90">USB Host Shield
 (plug in this side facing outwards)</text>
@@ -227,15 +227,18 @@ trim pot.</text>
 <text x="58.42" y="64.135" size="0.762" layer="26" font="vector" rot="MR0">CASE</text>
 <text x="95.25" y="63.8175" size="0.762" layer="26" font="vector" rot="MR0">CASE</text>
 <text x="152.4" y="1.905" size="0.762" layer="26" font="vector" rot="MR0">CASE</text>
-<text x="13.335" y="107.6325" size="1.27" layer="25" font="vector" rot="SR270">CH 1</text>
-<text x="13.6525" y="98.7425" size="1.27" layer="25" font="vector" rot="SR270">CH 2</text>
-<text x="5.3975" y="70.1675" size="1.27" layer="25" font="vector" rot="SR270">CH 4</text>
-<text x="12.3825" y="68.8975" size="1.27" layer="25" font="vector" rot="SR270">CH 3</text>
+<text x="10.1975" y="107.0325" size="1.27" layer="25" font="vector" rot="SR270">CH 1</text>
+<text x="10.1975" y="89.0775" size="1.27" layer="25" font="vector" rot="SR270">CH 2</text>
+<text x="10.1975" y="53.1675" size="1.27" layer="25" font="vector" rot="SR270">CH 4</text>
+<text x="10.1975" y="71.1225" size="1.27" layer="25" font="vector" rot="SR270">CH 3</text>
 <text x="15.21" y="30.9" size="1.524" layer="25" font="vector" rot="SR270">Serial Comms</text>
 <text x="15.0195" y="33.5035" size="1.6764" layer="26" font="vector" rot="MR270">Serial Comms </text>
 <hole x="144.4625" y="66.929" drill="3.048"/>
-<text x="19.2" y="114.6" size="1.27" layer="25" font="vector" rot="SR180">GND</text>
+<text x="28.2" y="114.6" size="1.27" layer="25" font="vector" rot="SR180">GND</text>
 <text x="32.6" y="96.8" size="1.27" layer="25" font="vector" rot="SR180">EN</text>
+<wire x1="24.6" y1="114" x2="22.6" y2="114" width="0.2" layer="21"/>
+<wire x1="22.6" y1="114" x2="23" y2="113.6" width="0.2" layer="21"/>
+<wire x1="22.6" y1="114" x2="23" y2="114.4" width="0.2" layer="21"/>
 </plain>
 <libraries>
 <library name="SparkFun">
@@ -4163,9 +4166,11 @@ design rules under a new name.</description>
 <wire x1="86.6775" y1="22.86" x2="86.6775" y2="16.6975" width="0.3048" layer="16"/>
 <wire x1="86.6775" y1="16.6975" x2="88.77" y2="14.605" width="0.3048" layer="16"/>
 <contactref element="M4" pad="7"/>
-<wire x1="54.2925" y1="87.9475" x2="52.252240625" y2="87.9475" width="0.2" layer="1"/>
-<wire x1="52.252240625" y1="92.2" x2="67.425" y2="92.2" width="0.2" layer="1"/>
-<wire x1="52.252240625" y1="87.9475" x2="52.252240625" y2="92.2" width="0.2" layer="1"/>
+<wire x1="54.2925" y1="87.9475" x2="52.8525" y2="87.9475" width="0.2" layer="1"/>
+<wire x1="52.8525" y1="87.9475" x2="52.252240625" y2="88.547759375" width="0.2" layer="1"/>
+<wire x1="52.252240625" y1="88.547759375" x2="52.252240625" y2="91.652240625" width="0.2" layer="1"/>
+<wire x1="52.252240625" y1="91.652240625" x2="52.8" y2="92.2" width="0.2" layer="1"/>
+<wire x1="52.8" y1="92.2" x2="67.425" y2="92.2" width="0.2" layer="1"/>
 </signal>
 <signal name="DIR_2">
 <contactref element="PCB2" pad="30"/>
@@ -4375,10 +4380,11 @@ design rules under a new name.</description>
 <wire x1="33.9725" y1="87.9475" x2="34.126225" y2="87.9475" width="0.2" layer="16"/>
 <wire x1="36.4873" y1="90.308575" x2="34.126225" y2="87.9475" width="0.2" layer="16"/>
 <wire x1="33.9725" y1="87.9475" x2="36.3475" y2="87.9475" width="0.2" layer="1"/>
-<wire x1="36.3475" y1="87.9475" x2="41.8" y2="93.4" width="0.2" layer="1"/>
-<wire x1="41.8" y1="93.4" x2="50.4" y2="93.4" width="0.2" layer="1"/>
-<wire x1="50.4" y1="93.4" x2="50.4" y2="61.4" width="0.2" layer="1"/>
-<wire x1="50.4" y1="61.4" x2="53.4" y2="58.4" width="0.2" layer="1"/>
+<wire x1="36.3475" y1="87.9475" x2="42" y2="93.6" width="0.2" layer="1"/>
+<wire x1="42" y1="93.6" x2="49.2" y2="93.6" width="0.2" layer="1"/>
+<wire x1="49.2" y1="93.6" x2="50.6" y2="92.2" width="0.2" layer="1"/>
+<wire x1="50.6" y1="92.2" x2="50.6" y2="61.2" width="0.2" layer="1"/>
+<wire x1="50.6" y1="61.2" x2="53.4" y2="58.4" width="0.2" layer="1"/>
 <via x="53.4" y="58.4" extent="1-16" drill="0.35"/>
 <wire x1="53.4" y1="58.4" x2="53.4" y2="58.2425" width="0.2" layer="16"/>
 <wire x1="53.4" y1="58.2425" x2="71.12" y2="58.2425" width="0.2" layer="16"/>
@@ -5242,6 +5248,10 @@ design rules under a new name.</description>
 <mfgpreviewcolor name="coppercolor" color="0xFFFFBF00"/>
 <mfgpreviewcolor name="substratecolor" color="0xFF786E46"/>
 </mfgpreviewcolors>
+<errors>
+<approved hash="3,16,38e9ea9bea9b38e9"/>
+<approved hash="3,16,78e183038d0b38e5"/>
+</errors>
 </board>
 </drawing>
 <compatibility>
